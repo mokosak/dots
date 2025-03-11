@@ -1,7 +1,7 @@
 Requirements
 ------------
 - In order to build dwm you need the Xlib header files.
-- In order to see special icons and have font working you need to copy JetBrainsMono Nerd Font from the dwm directory into the /usr/local/share/fonts/ directory.
+- In order to see special icons and have font working you need to copy Terminess Nerd Font from the directory into the /usr/local/share/fonts/ directory.
 
 
 Installation
@@ -12,6 +12,9 @@ Afterwards enter the following command to build and install dwm (if
 necessary as root):
 
     make clean install
+
+After installing dwm you should install other programs (slstatus, st and dmenu)
+I also use pulseaudio (pactl) for volume control, brightnessctl for adjusting the brightness and flameshot for screenshots.
 
 KeyStrokes
 ----------
@@ -32,6 +35,8 @@ MODKEY|SHIFT,E   EXITDWM MENU
 MODKEY, F3       UP VOLUME (pactl required)
 MODKEY, F2       DOWN VOLUME (pactl required)
 MODKEY, F1       MUTE VOLUME (pactl required)
+MODKEY, F4       BRIGHTNESS DOWN
+MODKEY, F5       BRIGHTNESS UP
 MODKEY|SHIFT,S   SCREENSHOT (flameshot package required)
 ```
 
@@ -44,4 +49,8 @@ pulseaudio -D &
 nitrogen --restore &
 dwm
 ```
+
+FINAL PRODUCT
+-------------
+![dots](https://github.com/user-attachments/assets/11f7df7d-2df6-43ab-afbc-9089e6cd5713)
 
