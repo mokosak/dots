@@ -1,3 +1,7 @@
+ATTENTION
+---------
+- I dont own the rights to the font or to the wallpaper. I downloaded the font from nerd fonts' official website and the wallpaper from wallhaven. So please dont take down my dots.
+
 Requirements
 ------------
 - In order to build dwm you need the Xlib header files.
