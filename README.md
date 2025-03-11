@@ -1,6 +1,6 @@
-ATTENTION
+Attention
 ---------
-- I dont own the rights to the font or to the wallpaper. I downloaded the font from nerd fonts' official website and the wallpaper from wallhaven. So please dont take down my dots.
+- I dont own the rights to the font or to the wallpaper. I downloaded the font from nerd fonts' official website and the wallpaper from wallhaven. So please dont report or take down my dots.
 
 Requirements
 ------------
