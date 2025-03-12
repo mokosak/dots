@@ -9,6 +9,7 @@ Requirements
 - To be able to use screenshot, volume and brightness controls, you need to install either "pipewire" or "pulseaudio" for volume control, "brightnessctl" for brightness control and "flameshot" for screenshots.
 - In order to see special icons and have font working you need to copy Terminess Nerd Font from the directory into the /usr/local/share/fonts/ directory.
 - For GTK Theme you need to install Everforest-Dark GTK Theme.
+- For Wallpaper to be displayed you need to install either "nitrogen" or "feh". I personally use nitrogen, thats why i have it in my .xinitrc file.
 
 
 Installation
