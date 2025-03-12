@@ -6,6 +6,7 @@ Requirements
 ------------
 - In order to build dwm you need the Xlib header files (libx11 libxft libxinerama).
 - To be able to compile (make clean install) you also need to install base-devel package.
+- To be able to use screenshot, volume and brightness controls, you need to install either "pipewire" or "pulseaudio" for volume control, "brightnessctl" for brightness control and "flameshot" for screenshots.
 - In order to see special icons and have font working you need to copy Terminess Nerd Font from the directory into the /usr/local/share/fonts/ directory.
 - For GTK Theme you need to install Everforest-Dark GTK Theme.
 
@@ -20,7 +21,6 @@ necessary as root):
     make clean install
 
 After installing dwm you should install other programs (slstatus, st and dmenu)
-I also use pulseaudio (pactl) for volume control, brightnessctl for adjusting the brightness and flameshot for screenshots.
 
 KeyStrokes
 ----------
