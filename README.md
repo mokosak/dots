@@ -63,9 +63,7 @@ GTK
 - Extract it and copy Everforest-Dark folder into /usr/share/themes/ (Warning: This will install it system-wide, if you want only user-wide install, copy it into ~/.themes folder.
   Command to copy:
   ```
-  
   sudo cp -r /path/to/your/theme /usr/share/themes/
-
   ```
 - Install GTK changer (i recommend lxappearance) and change the theme (optionally the font too).
 - I personally use "SpaceMono Nerd Font Mono" as my font and "ePapirus-Dark" as my icons.
