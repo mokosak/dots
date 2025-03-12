@@ -1,11 +1,13 @@
-Attention
----------
-- I dont own the rights to the font or to the wallpaper. I downloaded the font from nerd fonts' official website and the wallpaper from wallhaven. So please dont report or take down my dots.
+Copyright License
+------------------
+- I dont own the rights (License) to the font or the wallpaper. I downloaded the font from nerd fonts' official website (https://www.nerdfonts.com/) and the wallpaper from wallhaven (https://www.wallhaven.cc/). So please dont report or take down my dots.
 
 Requirements
 ------------
-- In order to build dwm you need the Xlib header files.
+- In order to build dwm you need the Xlib header files (libx11 libxft libxinerama).
+- To be able to compile (make clean install) you also need to install base-devel package.
 - In order to see special icons and have font working you need to copy Terminess Nerd Font from the directory into the /usr/local/share/fonts/ directory.
+- For GTK Theme you need to install Everforest-Dark GTK Theme.
 
 
 Installation
@@ -53,6 +55,17 @@ pulseaudio -D &
 nitrogen --restore &
 dwm
 ```
+
+GTK
+---
+- To be able to fully replicate this configuration, you will also need to configure your GTK theme (so other applications will share the same coloring).
+- Download "Everforest-Dark" Theme (many sources, i used KDE's official website)
+- Extract it and copy Everforest-Dark folder into /usr/share/themes/ (Warning: This will install it system-wide, if you want only user-wide install, copy it into ~/.themes folder.
+  Command to copy: ```sudo cp -r /path/to/your/theme /usr/share/themes/```
+- Install GTK changer (i recommend lxappearance) and change the theme (optionally the font too).
+- I personally use "SpaceMono Nerd Font Mono" as my font and "ePapirus-Dark" as my icons.
+
+
 
 FINAL PRODUCT
 -------------
