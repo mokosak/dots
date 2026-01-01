@@ -1,0 +1,3 @@
+# dots
+
+small suckless setup.
