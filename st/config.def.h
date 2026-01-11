@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "Spleen:pixelsize=16";
 static int borderpx = 2;
 
 /*
@@ -95,33 +95,33 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+	/* 8 normal colors (Ayu Mirage) */
+	"#1f2430",
+	"#f28779",
+	"#bae67e",
+	"#ffd580",
+	"#73d0ff",
+	"#d4bfff",
+	"#95e6cb",
+	"#cbccc6",
 
 	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+	"#707a8c",
+	"#f28779",
+	"#bae67e",
+	"#ffd580",
+	"#73d0ff",
+	"#d4bfff",
+	"#95e6cb",
+	"#ffffff",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
-	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+	"#87d96c", /* 256: cursor (green) */
+	"#1f2430", /* 257: reverse cursor */
+	"#cbccc6", /* 258: default foreground */
+	"#1f2430", /* 259: default background */
 };
 
 
