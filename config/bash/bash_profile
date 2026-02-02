@@ -1,0 +1,10 @@
+# ~/.bash_profile — login shell
+export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+
+# no display manager: drop straight into X on tty1 (before loading interactive shell)
+if [ -z "${DISPLAY:-}" ] && [ "$(tty)" = "/dev/tty1" ]; then
+	exec startx
+fi
+
+# normal login shell — load the interactive config
+[ -r "$HOME/.bashrc" ] && . "$HOME/.bashrc"
