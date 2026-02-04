@@ -1,0 +1,29 @@
+# ~/.bashrc — interactive bash (ble.sh)
+
+# interactive shells only
+case $- in *i*) ;; *) return ;; esac
+
+# ── history ──
+HISTFILE="$HOME/.bash_history"
+HISTSIZE=50000
+HISTFILESIZE=50000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend cmdhist
+
+# ── shell options (autocd etc. — matches the old zsh setopts) ──
+shopt -s autocd cdspell checkwinsize globstar
+
+# ── environment ──
+export EDITOR="${EDITOR:-vim}"
+export FZF_DEFAULT_OPTS='--height=45% --layout=reverse --border=sharp --color=fg:#cbccc6,bg:#1f2430,hl:#87d96c,fg+:#ffffff,bg+:#252b38,hl+:#87d96c,border:#707a8c,prompt:#95e6cb,pointer:#87d96c,marker:#f28779'
+
+# ── aliases ──
+alias ls='ls --color=auto'
+alias ll='ls -lah --group-directories-first'
+alias la='ls -A --color=auto'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias pls='doas'
+mkcd() { mkdir -p -- "$1" && cd -- "$1"; }
