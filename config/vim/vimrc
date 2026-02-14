@@ -1,0 +1,17 @@
+" ~/.vimrc — plain vim, no plugins, just nice defaults. Ayu-Mirage tinted.
+
+" ---- behaviour ----
+set nocompatible
+set encoding=utf-8
+set tabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set ignorecase smartcase incsearch hlsearch
+set scrolloff=5
+set hidden
+set mouse=a
+set splitright splitbelow
+set wildmenu wildmode=longest:full,full
+set noswapfile
+set undofile undodir=~/.cache/vim/undo
+silent !mkdir -p ~/.cache/vim/undo
+syntax on
+filetype plugin indent on
