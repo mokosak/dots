@@ -26,3 +26,15 @@ augroup hybrid_numbers
   autocmd InsertEnter,WinLeave,FocusLost * if &number | set norelativenumber | endif
   autocmd InsertLeave,WinEnter,FocusGained * if &number | set relativenumber | endif
 augroup END
+
+" ---- look (Ayu Mirage, no colorscheme plugin needed) ----
+set termguicolors
+highlight Normal       guibg=#1f2430 guifg=#cbccc6
+highlight LineNr       guifg=#707a8c
+highlight CursorLineNr guifg=#87d96c gui=bold
+highlight CursorLine   guibg=#252b38
+highlight Comment      guifg=#5c6773 gui=italic
+highlight Visual       guibg=#33415e
+highlight Search       guibg=#87d96c guifg=#1f2430
+highlight StatusLine   guibg=#87d96c guifg=#1f2430 gui=bold
+highlight StatusLineNC guibg=#252b38 guifg=#707a8c
