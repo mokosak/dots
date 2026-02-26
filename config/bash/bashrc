@@ -27,3 +27,16 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias pls='doas'
 mkcd() { mkdir -p -- "$1" && cd -- "$1"; }
+
+# doas with sudo-style password retries (opendoas asks once then exits).
+# Pre-auths with up to 3 tries; the persist cache then runs the real command.
+doas() {
+	case " $* " in *" -n "*) command doas "$@"; return;; esac   # leave -n calls alone
+	local i
+	for i in 1 2 3; do
+		command doas true 2>/dev/null && break
+		[ "$i" = 3 ] && { echo "doas: 3 incorrect attempts" >&2; return 1; }
+		echo "Sorry, try again." >&2
+	done
+	command doas "$@"
+}
