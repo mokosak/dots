@@ -28,12 +28,14 @@ install_deps() {
 	fi
 }
 
-# dwm/dmenu/st -> ~/.local/bin
+# dwm/dmenu/st -> ~/.local/bin; slock setuid-root -> /usr/local/bin
 build_suckless() {
 	for dir in dwm dmenu st; do
 		make -C "$dir" clean
 		make -C "$dir" PREFIX="$HOME/.local" install
 	done
+	make -C slock clean
+	$doas_cmd make -C slock install
 }
 
 install_deps
