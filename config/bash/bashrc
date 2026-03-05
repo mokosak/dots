@@ -40,3 +40,22 @@ doas() {
 	done
 	command doas "$@"
 }
+
+# ── prompt: Starship-style, two-line, git-aware (pure bash, Spleen-safe text) ──
+PROMPT_DIRTRIM=3                # show last 3 path components, like starship
+__sl_git() {
+	git rev-parse --is-inside-work-tree &>/dev/null || return
+	local br dirty
+	br=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null) || return
+	[ -n "$(git status --porcelain --ignore-submodules=dirty 2>/dev/null)" ] && dirty=' *'
+	printf ' \[\e[38;2;112;122;140m\]on \[\e[38;2;212;191;255m\]%s\[\e[38;2;242;135;121m\]%s\[\e[0m\]' "$br" "$dirty"
+}
+__sl_prompt() {
+	local ret=$?
+	local dim='\[\e[38;2;112;122;140m\]' grn='\[\e[1;38;2;135;217;108m\]' blu='\[\e[38;2;115;208;255m\]'
+	local rst='\[\e[0m\]' arr host=''
+	[ "$ret" = 0 ] && arr='\[\e[38;2;135;217;108m\]' || arr='\[\e[38;2;242;135;121m\]'
+	[ -n "${SSH_CONNECTION:-}" ] && host="${blu}\u@\h${dim} in ${rst}"
+	PS1="\n${host}${grn}\w${rst}$(__sl_git)\n${arr}❯${rst} "
+}
+PROMPT_COMMAND='__sl_prompt; history -a'
