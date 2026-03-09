@@ -38,3 +38,7 @@ highlight Visual       guibg=#33415e
 highlight Search       guibg=#87d96c guifg=#1f2430
 highlight StatusLine   guibg=#87d96c guifg=#1f2430 gui=bold
 highlight StatusLineNC guibg=#252b38 guifg=#707a8c
+
+" ---- statusline (built-in, shows file, flags, position) ----
+set laststatus=2 noshowmode
+set statusline=\ %f\ %m%r%h\ %=\ %y\ %l:%c\ \ %p%%\
