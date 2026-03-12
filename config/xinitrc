@@ -1,5 +1,12 @@
 #!/bin/sh
 export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+export _JAVA_AWT_WM_NONREPARENTING=1
+export XDG_CURRENT_DESKTOP=dwm
+export DESKTOP_SESSION=dwm
+export XDG_SESSION_TYPE=x11
+export GTK_USE_PORTAL=1
+export NO_AT_BRIDGE=1          # GTK3: don't connect to the AT-SPI accessibility bus
+export GTK_A11Y=none           # GTK4: disable the accessibility bridge
 [ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
 command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
 
