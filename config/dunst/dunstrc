@@ -7,6 +7,13 @@
     offset = (24, 56)
     notification_limit = 3
 
+    progress_bar = true
+    progress_bar_height = 7
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 160
+    progress_bar_max_width = 240
+    progress_bar_corner_radius = 0
+
     transparency = 0
     separator_height = 1
     padding = 12
