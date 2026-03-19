@@ -28,6 +28,16 @@ install_deps() {
 	fi
 }
 
+install_font() {
+	fc-match "SpaceMono Nerd Font" 2>/dev/null | grep -qi Space && return 0
+	tmp=${TMPDIR:-/tmp}/SpaceMono.zip
+	mkdir -p "$HOME/.local/share/fonts/SpaceMonoNerdFont"
+	curl -fL --proto '=https' --tlsv1.2 -o "$tmp" \
+		https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SpaceMono.zip
+	unzip -o "$tmp" -d "$HOME/.local/share/fonts/SpaceMonoNerdFont" >/dev/null
+	fc-cache -f "$HOME/.local/share/fonts"
+}
+
 # dwm/dmenu/st -> ~/.local/bin; slock setuid-root -> /usr/local/bin
 build_suckless() {
 	for dir in dwm dmenu st; do
@@ -39,4 +49,5 @@ build_suckless() {
 }
 
 install_deps
+install_font
 build_suckless
