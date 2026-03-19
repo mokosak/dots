@@ -48,6 +48,14 @@ build_suckless() {
 	$doas_cmd make -C slock install
 }
 
+install_scripts() {
+	mkdir -p "$HOME/.local/bin" "$HOME/.local/share/mpd/playlists"
+	for script in scripts/*; do
+		install -Dm755 "$script" "$HOME/.local/bin/$(basename "$script")"
+	done
+}
+
 install_deps
 install_font
 build_suckless
+install_scripts
