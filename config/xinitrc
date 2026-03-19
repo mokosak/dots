@@ -10,6 +10,11 @@ export GTK_A11Y=none           # GTK4: disable the accessibility bridge
 [ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
 command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
 
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+	dbus-update-activation-environment --systemd DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS \
+		XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1 || :
+fi
+
 command -v picom >/dev/null 2>&1 && picom --config "$HOME/.config/picom/picom.conf" &
 command -v dunst >/dev/null 2>&1 && dunst &
 
