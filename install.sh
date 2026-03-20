@@ -55,7 +55,15 @@ install_scripts() {
 	done
 }
 
+copy() { install -Dm"${3:-644}" "$1" "$2"; }
+
+install_configs() {
+	copy config/ncmpcpp/config              "$HOME/.config/ncmpcpp/config"
+	copy config/mpd/mpd.conf                "$HOME/.config/mpd/mpd.conf"
+}
+
 install_deps
 install_font
 build_suckless
 install_scripts
+install_configs

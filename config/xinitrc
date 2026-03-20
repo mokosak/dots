@@ -7,6 +7,10 @@ export XDG_SESSION_TYPE=x11
 export GTK_USE_PORTAL=1
 export NO_AT_BRIDGE=1          # GTK3: don't connect to the AT-SPI accessibility bus
 export GTK_A11Y=none           # GTK4: disable the accessibility bridge
+
+# Per-session logs go to the mode-700 runtime dir (wiped at logout), not /tmp.
+log=${XDG_RUNTIME_DIR:-/tmp}
+
 [ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
 command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
 
@@ -15,6 +19,7 @@ if command -v dbus-update-activation-environment >/dev/null 2>&1; then
 		XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1 || :
 fi
 
+command -v mpd >/dev/null 2>&1 && ! pgrep -x mpd >/dev/null 2>&1 && mpd "$HOME/.config/mpd/mpd.conf" >"$log/mpd.log" 2>&1 &
 command -v picom >/dev/null 2>&1 && picom --config "$HOME/.config/picom/picom.conf" &
 command -v dunst >/dev/null 2>&1 && dunst &
 
