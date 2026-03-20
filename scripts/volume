@@ -2,7 +2,7 @@
 sink=@DEFAULT_AUDIO_SINK@
 source=@DEFAULT_AUDIO_SOURCE@
 step=5%
-max=1.5
+max=1.0
 
 refresh() {
 	pkill -RTMIN+3 dwmblocks 2>/dev/null || :
