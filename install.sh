@@ -53,6 +53,9 @@ install_scripts() {
 	for script in scripts/*; do
 		install -Dm755 "$script" "$HOME/.local/bin/$(basename "$script")"
 	done
+	for so in /usr/lib/mpv-mpris/mpris.so /usr/lib/*/mpv-mpris/mpris.so /etc/mpv/scripts/mpris.so; do
+		[ -e "$so" ] && { mkdir -p "$HOME/.config/mpv/scripts"; ln -sfn "$so" "$HOME/.config/mpv/scripts/mpris.so"; break; }
+	done
 }
 
 copy() { install -Dm"${3:-644}" "$1" "$2"; }

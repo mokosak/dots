@@ -1,0 +1,14 @@
+#!/bin/sh
+if command -v mpc >/dev/null 2>&1 && mpc status >/dev/null 2>&1; then
+	line=$(mpc current 2>/dev/null)
+	if [ -n "$line" ]; then
+		state=$(mpc status 2>/dev/null | sed -n '2s/^\[\([^]]*\)\].*/\1/p')
+		notify-send "Now Playing" "$line\nMPD ${state:-unknown}"
+		exit 0
+	fi
+fi
+
+command -v playerctl >/dev/null 2>&1 || exit 0
+line=$(playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null)
+[ -n "$line" ] && [ "$line" != " - " ] || exit 0
+notify-send "Now Playing" "$line\n$(playerctl status 2>/dev/null)"
