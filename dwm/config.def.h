@@ -73,6 +73,16 @@ static const char *dmenucmd[] = {
 	NULL
 };
 static const char *termcmd[]     = { "st", NULL };
+static const char *volupcmd[]    = { "volume", "up", NULL };
+static const char *voldncmd[]    = { "volume", "down", NULL };
+static const char *volmutecmd[]  = { "volume", "mute", NULL };
+static const char *micmutecmd[]  = { "volume", "mic", NULL };
+static const char *brightupcmd[] = { "brightness", "up", NULL };
+static const char *brightdncmd[] = { "brightness", "down", NULL };
+static const char *playcmd[]     = { "music-control", "toggle", NULL };
+static const char *nextcmd[]     = { "music-control", "next", NULL };
+static const char *prevcmd[]     = { "music-control", "prev", NULL };
+static const char *stopcmd[]     = { "music-control", "stop", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -100,6 +110,16 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ 0,                            XF86XK_AudioRaiseVolume, spawn, {.v = volupcmd } },
+	{ 0,                            XF86XK_AudioLowerVolume, spawn, {.v = voldncmd } },
+	{ 0,                            XF86XK_AudioMute,        spawn, {.v = volmutecmd } },
+	{ 0,                            XF86XK_AudioMicMute,     spawn, {.v = micmutecmd } },
+	{ 0,                            XF86XK_MonBrightnessUp,  spawn, {.v = brightupcmd } },
+	{ 0,                            XF86XK_MonBrightnessDown,spawn, {.v = brightdncmd } },
+	{ 0,                            XF86XK_AudioPlay,        spawn, {.v = playcmd } },
+	{ 0,                            XF86XK_AudioNext,        spawn, {.v = nextcmd } },
+	{ 0,                            XF86XK_AudioPrev,        spawn, {.v = prevcmd } },
+	{ 0,                            XF86XK_AudioStop,        spawn, {.v = stopcmd } },
 };
 
 static const Button buttons[] = {
