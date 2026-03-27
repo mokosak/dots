@@ -1,0 +1,96 @@
+#!/bin/sh
+set -eu
+
+dir=${SCREENSHOT_DIR:-"$HOME/Pictures/Screenshots"}
+mkdir -p "$dir"
+
+ts=$(date +%Y-%m-%d_%H-%M-%S)
+file=$dir/screenshot_$ts.png
+
+notify_saved() {
+	notify-send -a screenshot -i "$file" -t 2200 "Screenshot saved" "$file"
+}
+
+notify_copied() {
+	notify-send -a screenshot -t 1800 "Screenshot copied" "Image is in the clipboard"
+}
+
+copy_png() {
+	xclip -selection clipboard -t image/png -i "$1"
+}
+
+capture_full() {
+	maim "$1"
+}
+
+capture_area() {
+	if [ -r "$HOME/.config/slop/clearselect.frag" ] && [ -r "$HOME/.config/slop/clearselect.vert" ]; then
+		geom=$(slop -r clearselect -l -b 2 -c 0.58,0.82,0.80,0.34 -f '%g') || exit 0
+		[ -n "$geom" ] || exit 0
+		maim -g "$geom" "$1"
+	else
+		maim -s -l -b 2 -c 0.58,0.82,0.80,0.35 "$1"
+	fi
+}
+
+capture_window() {
+	win=$(xdotool getactivewindow)
+	maim -i "$win" "$1"
+}
+
+save_mode() {
+	case "$1" in
+		full) capture_full "$file" ;;
+		area) capture_area "$file" ;;
+		window) capture_window "$file" ;;
+		delay) sleep 5; capture_full "$file" ;;
+		*) exit 2 ;;
+	esac
+	notify_saved
+}
+
+copy_mode() {
+	tmp=$(mktemp --suffix=.png)
+	trap 'rm -f "$tmp"' EXIT
+	case "$1" in
+		full) capture_full "$tmp" ;;
+		area) capture_area "$tmp" ;;
+		window) capture_window "$tmp" ;;
+		*) exit 2 ;;
+	esac
+	copy_png "$tmp"
+	notify_copied
+}
+
+case "${1:-menu}" in
+	full) save_mode full ;;
+	area) copy_mode area ;;
+	window) save_mode window ;;
+	menu)
+		rec='start recording'
+		command -v record >/dev/null 2>&1 && record status >/dev/null 2>&1 && rec='stop recording'
+		choice=$(printf '%s\n' \
+			"$rec" \
+			'area copy' \
+			'area save' \
+			'window copy' \
+			'window save' \
+			'full copy' \
+			'full save' \
+			'delay 5s save' | dmenu -i -bw 2 -l 8 -p "shot:") || exit 0
+		case "$choice" in
+			'start recording'|'stop recording') record toggle ;;
+			'area copy') copy_mode area ;;
+			'area save') save_mode area ;;
+			'window copy') copy_mode window ;;
+			'window save') save_mode window ;;
+			'full copy') copy_mode full ;;
+			'full save') save_mode full ;;
+			'delay 5s save') save_mode delay ;;
+		esac
+		;;
+	*)
+		printf 'usage: screenshot [menu|area|window|full]\n' >&2
+		exit 2
+		;;
+esac
