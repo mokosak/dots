@@ -38,6 +38,33 @@ install_font() {
 	fc-cache -f "$HOME/.local/share/fonts"
 }
 
+# spleen bitmap font: .bdf/.pcf for xft (dwm/dmenu/st), .otb for pango (dunst),
+# and a 16x32 console face for the tty.
+install_spleen() {
+	ver=2.2.0
+	tmp=${TMPDIR:-/tmp}/spleen-$ver
+	if [ ! -d "$tmp" ]; then
+		curl -fL --proto '=https' --tlsv1.2 -o "$tmp.tar.gz" \
+			"https://github.com/fcambus/spleen/releases/download/$ver/spleen-$ver.tar.gz"
+		tar xzf "$tmp.tar.gz" -C "${TMPDIR:-/tmp}"
+	fi
+	if ! fc-match "Spleen" 2>/dev/null | grep -qi spleen; then
+		mkdir -p "$HOME/.local/share/fonts/spleen"
+		cp "$tmp"/spleen-*.bdf "$tmp"/spleen-*.pcf "$HOME/.local/share/fonts/spleen/"
+		fc-cache -f "$HOME/.local/share/fonts"
+	fi
+	if [ ! -d "$HOME/.local/share/fonts/spleen-otb" ]; then
+		mkdir -p "$HOME/.local/share/fonts/spleen-otb"
+		cp "$tmp"/spleen-*.otb "$HOME/.local/share/fonts/spleen-otb/"
+		fc-cache -f "$HOME/.local/share/fonts"
+	fi
+	if [ ! -f /usr/share/kbd/consolefonts/spleen-16x32.psfu.gz ]; then
+		gzip -kf "$tmp"/spleen-12x24.psfu "$tmp"/spleen-16x32.psfu
+		$doas_cmd install -m644 "$tmp"/spleen-12x24.psfu.gz "$tmp"/spleen-16x32.psfu.gz /usr/share/kbd/consolefonts/
+		$doas_cmd sed -i 's/^FONT=.*/FONT=spleen-16x32/' /etc/vconsole.conf
+	fi
+}
+
 # dwm/dmenu/st -> ~/.local/bin; slock setuid-root -> /usr/local/bin
 build_suckless() {
 	for dir in dwm dmenu st; do
@@ -67,6 +94,7 @@ install_configs() {
 
 install_deps
 install_font
+install_spleen
 build_suckless
 install_scripts
 install_configs
