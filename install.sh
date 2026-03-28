@@ -90,6 +90,8 @@ copy() { install -Dm"${3:-644}" "$1" "$2"; }
 install_configs() {
 	copy config/ncmpcpp/config              "$HOME/.config/ncmpcpp/config"
 	copy config/mpd/mpd.conf                "$HOME/.config/mpd/mpd.conf"
+	copy config/slop/clearselect.frag       "$HOME/.config/slop/clearselect.frag"
+	copy config/slop/clearselect.vert       "$HOME/.config/slop/clearselect.vert"
 }
 
 install_deps
