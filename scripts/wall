@@ -1,0 +1,57 @@
+#!/bin/sh
+set -eu
+
+wallpaper_dir=${WALLPAPER_DIR:-"$HOME/Pictures/Wallpapers"}
+bg_link=${XDG_DATA_HOME:-"$HOME/.local/share"}/bg
+solid_color=${WALLPAPER_SOLID:-"#1f2430"}
+
+pick_random() {
+	find "$wallpaper_dir" -type f \( \
+		-iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \
+	\) 2>/dev/null | shuf -n 1
+}
+
+pick_menu() {
+	find "$wallpaper_dir" -type f \( \
+		-iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \
+	\) 2>/dev/null | sort | dmenu -i -bw 2 -l 12 -p "wall:"
+}
+
+set_wallpaper() {
+	target=$1
+	mkdir -p "$(dirname "$bg_link")"
+	ln -sfn "$(readlink -f "$target")" "$bg_link"
+	xwallpaper --zoom "$bg_link"
+	notify-send -a wall -t 1800 "Wallpaper" "$(basename "$target")"
+}
+
+case "${1:-apply}" in
+	apply)
+		if [ -e "$bg_link" ]; then
+			xwallpaper --zoom "$bg_link"
+		elif command -v xsetroot >/dev/null 2>&1; then
+			xsetroot -solid "$solid_color"
+		else
+			exit 1
+		fi
+		;;
+	solid)
+		rm -f "$bg_link"
+		xsetroot -solid "$solid_color"
+		notify-send -a wall -t 1400 "Wallpaper" "Ayu Mirage solid"
+		;;
+	random)
+		target=$(pick_random)
+		[ -n "$target" ] || { notify-send -a wall "Wallpaper" "No images in $wallpaper_dir"; exit 1; }
+		set_wallpaper "$target"
+		;;
+	menu)
+		target=$(pick_menu) || exit 0
+		[ -n "$target" ] || exit 0
+		set_wallpaper "$target"
+		;;
+	*)
+		[ -f "$1" ] || { notify-send -a wall "Wallpaper" "Not a file: $1"; exit 1; }
+		set_wallpaper "$1"
+		;;
+esac

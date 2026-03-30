@@ -12,6 +12,7 @@ export GTK_A11Y=none           # GTK4: disable the accessibility bridge
 log=${XDG_RUNTIME_DIR:-/tmp}
 
 [ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
+command -v wall >/dev/null 2>&1 && wall apply >/dev/null 2>&1 || xsetroot -solid "#1f2430"
 command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
 
 if command -v dbus-update-activation-environment >/dev/null 2>&1; then
