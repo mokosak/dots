@@ -42,3 +42,8 @@ highlight StatusLineNC guibg=#252b38 guifg=#707a8c
 " ---- statusline (built-in, shows file, flags, position) ----
 set laststatus=2 noshowmode
 set statusline=\ %f\ %m%r%h\ %=\ %y\ %l:%c\ \ %p%%\
+
+" ---- a couple of handy maps ----
+let mapleader = " "
+nnoremap <leader>w :w<CR>
+nnoremap <leader><space> :nohlsearch<CR>
