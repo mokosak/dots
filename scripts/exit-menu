@@ -1,0 +1,12 @@
+#!/bin/sh
+choice=$(printf 'lock\nrestart dwm\nhibernate\nsuspend\nlogout\nreboot\nshutdown\n' | dmenu -i -bw 2 -p "exit:")
+
+case "$choice" in
+	lock) slock ;;
+	'restart dwm') pkill -HUP -x dwm ;;
+	hibernate) slock & systemctl hibernate ;;
+	suspend) slock & systemctl suspend ;;
+	logout) pkill -TERM -u "$USER" ;;
+	reboot) systemctl reboot ;;
+	shutdown) systemctl poweroff ;;
+esac
