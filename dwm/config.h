@@ -73,6 +73,14 @@ static const char *dmenucmd[] = {
 	NULL
 };
 static const char *termcmd[]     = { "st", NULL };
+static const char *musiccmd[]    = { "st", "-e", "ncmpcpp", NULL };
+static const char *ytcmd[]       = { "yt", NULL };
+static const char *lockcmd[]     = { "slock", NULL };
+static const char *exitcmd[]     = { "exit-menu", NULL };
+static const char *wallcmd[]     = { "wall", "menu", NULL };
+static const char *shotcmd[]     = { "screenshot", "menu", NULL };
+static const char *shotareacmd[] = { "screenshot", "area", NULL };
+static const char *shotfullcmd[] = { "screenshot", "full", NULL };
 static const char *volupcmd[]    = { "volume", "up", NULL };
 static const char *voldncmd[]    = { "volume", "down", NULL };
 static const char *volmutecmd[]  = { "volume", "mute", NULL };
@@ -110,6 +118,15 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = exitcmd } },
+	{ MODKEY,                       XK_m,      spawn,          {.v = musiccmd } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = micmutecmd } },
+	{ MODKEY,                       XK_y,      spawn,          {.v = ytcmd } },
+	{ MODKEY,                       XK_w,      spawn,          {.v = wallcmd } },
+	{ MODKEY,                       XK_x,      spawn,          {.v = lockcmd } },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = shotareacmd } },
+	{ 0,                            XK_Print,  spawn,          {.v = shotfullcmd } },
+	{ ShiftMask,                    XK_Print,  spawn,          {.v = shotcmd } },
 	{ 0,                            XF86XK_AudioRaiseVolume, spawn, {.v = volupcmd } },
 	{ 0,                            XF86XK_AudioLowerVolume, spawn, {.v = voldncmd } },
 	{ 0,                            XF86XK_AudioMute,        spawn, {.v = volmutecmd } },
