@@ -97,9 +97,16 @@ install_configs() {
 	copy config/fontconfig/fonts.conf       "$HOME/.config/fontconfig/fonts.conf"
 }
 
+# keyboard layout + boot to tty1, no greeter
+install_system() {
+	$doas_cmd mkdir -p /etc/X11/xorg.conf.d
+	$doas_cmd cp config/X11/xorg.conf.d/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
+}
+
 install_deps
 install_font
 install_spleen
 build_suckless
 install_scripts
 install_configs
+install_system
