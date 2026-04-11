@@ -65,9 +65,9 @@ install_spleen() {
 	fi
 }
 
-# dwm/dmenu/st -> ~/.local/bin; slock setuid-root -> /usr/local/bin
+# dwm/dmenu/st/dwmblocks -> ~/.local/bin; slock setuid-root -> /usr/local/bin
 build_suckless() {
-	for dir in dwm dmenu st; do
+	for dir in dwm dmenu st dwmblocks; do
 		make -C "$dir" clean
 		make -C "$dir" PREFIX="$HOME/.local" install
 	done
