@@ -14,7 +14,7 @@
 #define SIGMINUS		SIGRTMIN
 #endif
 #define LENGTH(X)               (sizeof(X) / sizeof (X[0]))
-#define CMDLENGTH		50
+#define CMDLENGTH		64
 #define MIN( a, b ) ( ( a < b) ? a : b )
 #define STATUSLENGTH (LENGTH(blocks) * CMDLENGTH + 1)
 
@@ -34,7 +34,7 @@ void setupsignals();
 void sighandler(int signum);
 int getstatus(char *str, char *last);
 void statusloop();
-void termhandler();
+void termhandler(int signum);
 void pstdout();
 #ifndef NO_X
 void setroot();
@@ -185,8 +185,9 @@ void sighandler(int signum)
 	writestatus();
 }
 
-void termhandler()
+void termhandler(int signum)
 {
+	(void)signum;
 	statusContinue = 0;
 }
 
@@ -203,7 +204,7 @@ int main(int argc, char** argv)
 		return 1;
 #endif
 	delimLen = MIN(delimLen, strlen(delim));
-	delim[delimLen++] = '\0';
+	delim[delimLen] = '\0';
 	signal(SIGTERM, termhandler);
 	signal(SIGINT, termhandler);
 	statusloop();
