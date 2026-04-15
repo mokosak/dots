@@ -1,0 +1,47 @@
+#!/bin/sh
+if [ "${DWM_STATUS_CLICK:-0}" != 1 ]; then
+	BLOCK_BUTTON=
+fi
+
+case "${BLOCK_BUTTON:-}" in
+1) music-control toggle ;;
+2) setsid -f st -e ncmpcpp >/dev/null 2>&1 ;;
+3) now-playing ;;
+4) music-control prev ;;
+5) music-control next ;;
+esac
+
+if command -v record >/dev/null 2>&1 && rec=$(record status 2>/dev/null); then
+	printf 'recording: %s\n' "$rec"
+	exit 0
+fi
+
+if command -v mpc >/dev/null 2>&1 && mpc status >/dev/null 2>&1; then
+	current=$(mpc current 2>/dev/null)
+	if [ -n "$current" ]; then
+		state=$(mpc status 2>/dev/null | sed -n '2s/^\[\([^]]*\)\].*/\1/p')
+		label=MPD
+		[ "$state" = paused ] && label="MPD pause"
+		printf '%s %.38s\n' "$label" "$current"
+		exit 0
+	fi
+fi
+
+command -v playerctl >/dev/null 2>&1 || exit 0
+status=$(playerctl status 2>/dev/null) || exit 0
+artist=$(playerctl metadata xesam:artist 2>/dev/null)
+title=$(playerctl metadata xesam:title 2>/dev/null)
+
+case "$title" in
+*" is playing media")
+	if command -v xdotool >/dev/null 2>&1; then
+		browser=${title% is playing media}
+		wt=$(xdotool search --name " — $browser\$" getwindowname %@ 2>/dev/null | sed -n '1p')
+		[ -n "$wt" ] && title=${wt% — $browser}
+	fi
+	;;
+esac
+
+[ -n "$artist" ] && disp="$artist - $title" || disp="$title"
+[ -n "$disp" ] && [ "$disp" != " - " ] || exit 0
+[ "$status" = Paused ] && printf '(paused) %.38s\n' "$disp" || printf '%.38s\n' "$disp"
