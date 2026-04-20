@@ -25,5 +25,6 @@ fi
 command -v mpd >/dev/null 2>&1 && ! pgrep -x mpd >/dev/null 2>&1 && mpd "$HOME/.config/mpd/mpd.conf" >"$log/mpd.log" 2>&1 &
 command -v picom >/dev/null 2>&1 && picom --config "$HOME/.config/picom/picom.conf" &
 command -v dunst >/dev/null 2>&1 && dunst &
+command -v dwmblocks >/dev/null 2>&1 && dwmblocks &
 
 exec dwm
