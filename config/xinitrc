@@ -16,6 +16,7 @@ command -v kb-layout >/dev/null 2>&1 && kb-layout apply
 command -v kb-layout >/dev/null 2>&1 && ! pgrep -u "$USER" -f "kb-layout daemon" >/dev/null 2>&1 && kb-layout daemon >"$log/kb-layout.log" 2>&1 &
 command -v wall >/dev/null 2>&1 && wall apply >/dev/null 2>&1 || xsetroot -solid "#1f2430"
 command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
+command -v bluetoothctl >/dev/null 2>&1 && bluetoothctl power off >/dev/null 2>&1 || :
 
 if command -v dbus-update-activation-environment >/dev/null 2>&1; then
 	dbus-update-activation-environment --systemd DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS \
