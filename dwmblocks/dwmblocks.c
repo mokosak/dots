@@ -53,32 +53,48 @@ static void (*writestatus) () = pstdout;
 static char statusbar[LENGTH(blocks)][CMDLENGTH] = {0};
 static char statusstr[2][STATUSLENGTH];
 static int statusContinue = 1;
-static int returnStatus = 0;
 
-//opens process *cmd and stores output in *output
+// opens process *cmd and stores output in *output
 void getcmd(const Block *block, char *output)
 {
-	//make sure status is same until output is ready
-	char tempstatus[CMDLENGTH] = {0};
-	strcpy(tempstatus, block->icon);
+	char buf[CMDLENGTH] = {0};
 	FILE *cmdf = popen(block->command, "r");
-	if (!cmdf)
+	if (!cmdf) {
+		output[0] = '\0';
 		return;
-	int i = strlen(block->icon);
-	fgets(tempstatus+i, CMDLENGTH-i-delimLen, cmdf);
-	i = strlen(tempstatus);
-	//if block and command output are both not empty
-	if (i != 0) {
-		//only chop off newline if one is present at the end
-		i = tempstatus[i-1] == '\n' ? i-1 : i;
-		if (delim[0] != '\0') {
-			strncpy(tempstatus+i, delim, delimLen);
-		}
-		else
-			tempstatus[i++] = '\0';
 	}
-	strcpy(output, tempstatus);
+	if (!fgets(buf, sizeof buf, cmdf))
+		buf[0] = '\0';
 	pclose(cmdf);
+
+	int n = strlen(buf);
+	if (n && buf[n - 1] == '\n')
+		buf[--n] = '\0';
+	if (n == 0) {
+		output[0] = '\0';
+		return;
+	}
+
+	int i = 0;
+	if (block->signal > 0 && block->signal < 32)
+		output[i++] = (char)block->signal;
+	int iconlen = block->icon ? (int)strlen(block->icon) : 0;
+	int room = CMDLENGTH - i - iconlen - delimLen - 1;
+	if (room < 0)
+		room = 0;
+	if (n > room)
+		n = room;
+	if (iconlen) {
+		memcpy(output + i, block->icon, iconlen);
+		i += iconlen;
+	}
+	memcpy(output + i, buf, n);
+	i += n;
+	if (delimLen > 0) {
+		memcpy(output + i, delim, delimLen);
+		i += delimLen;
+	}
+	output[i] = '\0';
 }
 
 void getcmds(int time)
@@ -122,7 +138,9 @@ int getstatus(char *str, char *last)
 	str[0] = '\0';
 	for (unsigned int i = 0; i < LENGTH(blocks); i++)
 		strcat(str, statusbar[i]);
-	str[strlen(str)-strlen(delim)] = '\0';
+	size_t len = strlen(str);
+	if (len >= strlen(delim))
+		str[len - strlen(delim)] = '\0';
 	return strcmp(str, last);//0 if they are the same
 }
 
