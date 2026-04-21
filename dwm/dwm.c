@@ -260,6 +260,8 @@ static void updatetitle(Client *c);
 static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
+static int statuswidth(const char *raw, char *rendered, size_t renderedsz, int sigx[], size_t sigxlen);
+static void statusclick(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
@@ -272,6 +274,8 @@ static void zoom(const Arg *arg);
 static Systray *systray = NULL;
 static const char broken[] = "broken";
 static char stext[256];
+static char stextr[256];
+static int stsigx[32];
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh;               /* bar height */
@@ -460,6 +464,7 @@ buttonpress(XEvent *e)
 	Client *c;
 	Monitor *m;
 	XButtonPressedEvent *ev = &e->xbutton;
+	int statusw, statusx, px, best_sig, best_x;
 
 	click = ClkRootWin;
 	/* focus monitor if necessary */
@@ -484,9 +489,20 @@ buttonpress(XEvent *e)
 			arg.ui = 1 << i;
 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
 			click = ClkLtSymbol;
-		else if (ev->x > selmon->ww - (int)TEXTW(stext))
+		else if ((statusw = statuswidth(stext, stextr, sizeof(stextr), stsigx, LENGTH(stsigx)))
+		         && ev->x > (statusx = selmon->ww - statusw - getstatusgap(selmon))) {
 			click = ClkStatusText;
-		else
+			px = ev->x - statusx;
+			best_sig = 0;
+			best_x = -1;
+			for (i = 1; i < LENGTH(stsigx); i++) {
+				if (stsigx[i] >= 0 && stsigx[i] <= px && stsigx[i] > best_x) {
+					best_x = stsigx[i];
+					best_sig = i;
+				}
+			}
+			arg.i = best_sig;
+		} else
 			click = ClkWinTitle;
 	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
@@ -496,8 +512,20 @@ buttonpress(XEvent *e)
 	}
 	for (i = 0; i < LENGTH(buttons); i++)
 		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
-		&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+		&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state)) {
+			if (click == ClkStatusText) {
+				char buf[4];
+				snprintf(buf, sizeof buf, "%u", ev->button);
+				setenv("BLOCK_BUTTON", buf, 1);
+				setenv("DWM_STATUS_CLICK", "1", 1);
+			}
+			buttons[i].func((click == ClkTagBar || click == ClkStatusText)
+			                && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+			if (click == ClkStatusText) {
+				unsetenv("BLOCK_BUTTON");
+				unsetenv("DWM_STATUS_CLICK");
+			}
+		}
 }
 
 void
@@ -813,8 +841,8 @@ drawbar(Monitor *m)
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
-		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
+		tw = statuswidth(stext, stextr, sizeof(stextr), stsigx, LENGTH(stsigx));
+		drw_text(drw, m->ww - tw - stw, 0, tw, bh, lrpad / 2, stextr, 0);
 	}
 
 	resizebarwin(m);
@@ -2445,6 +2473,47 @@ view(const Arg *arg)
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
 	focus(NULL);
 	arrange(selmon);
+}
+
+int
+statuswidth(const char *raw, char *rendered, size_t renderedsz, int sigx[], size_t sigxlen)
+{
+	size_t i;
+	int outlen = 0;
+
+	if (rendered && renderedsz > 0)
+		rendered[0] = '\0';
+	if (sigx)
+		for (i = 0; i < sigxlen; i++)
+			sigx[i] = -1;
+
+	for (i = 0; raw[i]; i++) {
+		unsigned char c = (unsigned char)raw[i];
+
+		if (c > 0 && c < ' ') {
+			if (sigx && c < sigxlen)
+				sigx[c] = rendered ? drw_fontset_getwidth(drw, rendered) : 0;
+			continue;
+		}
+		if (rendered && renderedsz > 0 && outlen < (int)renderedsz - 1) {
+			rendered[outlen++] = raw[i];
+			rendered[outlen] = '\0';
+		}
+	}
+
+	return rendered && rendered[0] ? drw_fontset_getwidth(drw, rendered) + lrpad : 0;
+}
+
+void
+statusclick(const Arg *arg)
+{
+	const char *argv[] = { "/bin/sh", "-c", NULL, NULL };
+	Arg a = { .v = argv };
+
+	if (arg->i <= 0 || (size_t)arg->i >= LENGTH(statuscmds) || !statuscmds[arg->i])
+		return;
+	argv[2] = statuscmds[arg->i];
+	spawn(&a);
 }
 
 Client *

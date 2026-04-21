@@ -92,6 +92,16 @@ static const char *nextcmd[]     = { "music-control", "next", NULL };
 static const char *prevcmd[]     = { "music-control", "prev", NULL };
 static const char *stopcmd[]     = { "music-control", "stop", NULL };
 
+static const char *statuscmds[] = {
+	[0] = NULL,
+	[1] = "sb-clock",
+	[2] = "sb-battery",
+	[3] = "sb-volume",
+	[4] = "sb-network",
+	[5] = "sb-bluetooth",
+	[6] = "sb-music",
+};
+
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
@@ -144,7 +154,11 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        statusclick,    {0} },
+	{ ClkStatusText,        0,              Button2,        statusclick,    {0} },
+	{ ClkStatusText,        0,              Button3,        statusclick,    {0} },
+	{ ClkStatusText,        0,              Button4,        statusclick,    {0} },
+	{ ClkStatusText,        0,              Button5,        statusclick,    {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
