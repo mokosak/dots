@@ -18,7 +18,7 @@ static const char *colors[SchemeLast][2] = {
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
-static unsigned int border_width = 2;
+static unsigned int border_width = 4;
 
 /*
  * Characters not considered part of a word while deleting words
