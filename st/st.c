@@ -975,6 +975,9 @@ tsetdirt(int top, int bot)
 {
 	int i;
 
+	if (term.row <= 0)
+		return;
+
 	LIMIT(top, 0, term.row-1);
 	LIMIT(bot, 0, term.row-1);
 
@@ -2451,6 +2454,7 @@ eschandle(uchar ascii)
 		resettitle();
 		xloadcols();
 		xsetmode(0, MODE_HIDE);
+		xsetmode(0, MODE_BRCKTPASTE);
 		break;
 	case '=': /* DECPAM -- Application keypad */
 		xsetmode(1, MODE_APPKEYPAD);
