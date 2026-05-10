@@ -3,6 +3,9 @@
 # interactive shells only
 case $- in *i*) ;; *) return ;; esac
 
+# ── ble.sh: source first with --noattach, ble-attach at the very end ──
+[[ $- == *i* ]] && source "$HOME/.local/share/blesh/ble.sh" --noattach
+
 # ── history ──
 HISTFILE="$HOME/.bash_history"
 HISTSIZE=50000
@@ -57,5 +60,20 @@ __sl_prompt() {
 	[ "$ret" = 0 ] && arr='\[\e[38;2;135;217;108m\]' || arr='\[\e[38;2;242;135;121m\]'
 	[ -n "${SSH_CONNECTION:-}" ] && host="${blu}\u@\h${dim} in ${rst}"
 	PS1="\n${host}${grn}\w${rst}$(__sl_git)\n${arr}❯${rst} "
+	if [[ ${BLE_VERSION-} ]]; then
+		if [ "$ret" = 0 ]; then
+			bleopt prompt_rps1='\[\e[38;2;112;122;140m\]\D{%H:%M}\[\e[0m\]'
+		else
+			bleopt prompt_rps1="\[\e[38;2;242;135;121m\]exit:$ret \[\e[38;2;112;122;140m\]\D{%H:%M}\[\e[0m\]"
+		fi
+	fi
 }
 PROMPT_COMMAND='__sl_prompt; history -a'
+
+# ── ble.sh look: autosuggestion in dim gray (was ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE) ──
+if [[ ${BLE_VERSION-} ]]; then
+	ble-face auto_complete='fg=#707a8c' 2>/dev/null
+fi
+
+# ── attach ble.sh (must stay last) ──
+[[ ${BLE_VERSION-} ]] && ble-attach

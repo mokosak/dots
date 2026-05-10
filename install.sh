@@ -65,6 +65,15 @@ install_spleen() {
 	fi
 }
 
+# ble.sh - bash line editor (autosuggestions + syntax highlighting)
+install_blesh() {
+	[ -r "$HOME/.local/share/blesh/ble.sh" ] && return 0
+	tmp=$(mktemp -d)
+	git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$tmp/ble.sh"
+	make -C "$tmp/ble.sh" install PREFIX="$HOME/.local"
+	rm -rf "$tmp"
+}
+
 # dwm/dmenu/st/dwmblocks -> ~/.local/bin; slock setuid-root -> /usr/local/bin
 build_suckless() {
 	for dir in dwm dmenu st dwmblocks; do
@@ -106,6 +115,7 @@ install_system() {
 install_deps
 install_font
 install_spleen
+install_blesh
 build_suckless
 install_scripts
 install_configs
