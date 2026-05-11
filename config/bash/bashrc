@@ -75,5 +75,10 @@ if [[ ${BLE_VERSION-} ]]; then
 	ble-face auto_complete='fg=#707a8c' 2>/dev/null
 fi
 
+# ── greeter ──
+if [[ -t 1 && -z ${SUCKLESS_NO_FETCH:-} ]]; then
+	command -v fetch >/dev/null 2>&1 && fetch
+fi
+
 # ── attach ble.sh (must stay last) ──
 [[ ${BLE_VERSION-} ]] && ble-attach
