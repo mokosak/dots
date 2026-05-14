@@ -226,6 +226,7 @@ static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, lon
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
+static void fullscreen(const Arg *arg);
 static void setfullscreen(Client *c, int fullscreen);
 static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
@@ -1667,6 +1668,8 @@ sendmon(Client *c, Monitor *m)
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	attach(c);
 	attachstack(c);
+	if (c->isfullscreen)
+		resizeclient(c, m->mx, m->my, m->mw, m->mh);
 	focus(NULL);
 	arrange(NULL);
 }
@@ -1724,8 +1727,16 @@ setfocus(Client *c)
 		XChangeProperty(dpy, root, netatom[NetActiveWindow],
 			XA_WINDOW, 32, PropModeReplace,
 			(unsigned char *) &(c->win), 1);
+		sendevent(c->win, wmatom[WMTakeFocus], NoEventMask,
+		          wmatom[WMTakeFocus], CurrentTime, 0, 0, 0);
 	}
-	sendevent(c, wmatom[WMTakeFocus]);
+}
+
+void
+fullscreen(const Arg *arg)
+{
+	if (selmon->sel)
+		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 }
 
 void
