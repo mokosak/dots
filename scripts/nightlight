@@ -3,7 +3,7 @@ set -eu
 
 start_hour=${NIGHTLIGHT_START:-21}
 end_hour=${NIGHTLIGHT_END:-7}
-night_temp=${NIGHTLIGHT_TEMP:-3200}
+night_temp=${NIGHTLIGHT_TEMP:-4200}
 state_file=${XDG_RUNTIME_DIR:-/tmp}/nightlight-state
 
 is_night() {
