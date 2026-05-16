@@ -480,8 +480,13 @@ bpress(XEvent *e)
 		return;
 	}
 
-	if (mouseaction(e, 0))
+	if (mouseaction(e, 0)) {
+		/* While dragging a selection (Button1 held), wheel-scrolling the
+		 * scrollback should grow the selection to follow the mouse. */
+		if ((btn == Button4 || btn == Button5) && (buttons & 1) && !tisaltscr())
+			mousesel(e, 0);
 		return;
+	}
 
 	if (btn == Button1) {
 		/*
@@ -719,6 +724,37 @@ bmotion(XEvent *e)
 	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forcemousemod)) {
 		mousereport(e);
 		return;
+	}
+
+	/* Edge auto-scroll: while dragging a selection (Button1 held), pushing the
+	 * pointer PAST the top/bottom text edge scrolls the scrollback so the
+	 * selection grows off-screen. Further past the edge = faster (you meter
+	 * the speed with your finger). Touchpad-friendly: no second gesture. */
+	if ((buttons & 1) && !tisaltscr()) {
+		int y = e->xbutton.y, over = 0, dir = 0;
+
+		if (y < borderpx) {                       /* above the text: scroll up */
+			dir = 1;
+			over = borderpx - y;
+		} else if (y >= borderpx + win.th) {      /* below the text: scroll down */
+			dir = -1;
+			over = y - (borderpx + win.th) + 1;
+		}
+
+		if (dir) {
+			static struct timespec last;
+			struct timespec now;
+
+			clock_gettime(CLOCK_MONOTONIC, &now);
+			if (TIMEDIFF(now, last) >= autoscrolldelay) {
+				Arg a = { .i = 1 + over / win.ch };   /* ramp with overshoot */
+				if (dir > 0)
+					kscrollup(&a);
+				else
+					kscrolldown(&a);
+				last = now;
+			}
+		}
 	}
 
 	mousesel(e, 0);
