@@ -73,6 +73,7 @@ static const char *dmenucmd[] = {
 	NULL
 };
 static const char *termcmd[]     = { "st", NULL };
+static const char *browsercmd[]  = { "firefox", NULL };
 static const char *musiccmd[]    = { "st", "-e", "ncmpcpp", NULL };
 static const char *ytcmd[]       = { "yt", NULL };
 static const char *lockcmd[]     = { "slock", NULL };
@@ -106,6 +107,7 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
