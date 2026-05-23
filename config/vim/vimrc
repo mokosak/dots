@@ -68,3 +68,10 @@ if executable(s:csharp_ls)
     autocmd FileType cs nnoremap <buffer> ]d         :LspNextDiagnostic<CR>
   augroup END
 endif
+
+" dotnet build → quickfix  (:make, then :copen / :cnext / :cprev)
+augroup dotnet_build
+  autocmd!
+  autocmd FileType cs setlocal makeprg=dotnet\ build\ -nologo\ /clp:NoSummary
+  autocmd FileType cs let &l:errorformat = '%f(%l\,%c): %trror %m,%f(%l\,%c): %tarning %m'
+augroup END
