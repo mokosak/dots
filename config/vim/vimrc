@@ -47,3 +47,24 @@ set statusline=\ %f\ %m%r%h\ %=\ %y\ %l:%c\ \ %p%%\
 let mapleader = " "
 nnoremap <leader>w :w<CR>
 nnoremap <leader><space> :nohlsearch<CR>
+
+" ---- C# : LSP (csharp-ls) + dotnet build → quickfix ----
+" lean stack: vim-lsp + async.vim as native packages (~/.vim/pack), no node/coc.
+let s:csharp_ls = expand('~/.dotnet/tools/csharp-ls')
+if executable(s:csharp_ls)
+  augroup lsp_csharp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'csharp-ls',
+      \ 'cmd': {server_info->[s:csharp_ls]},
+      \ 'allowlist': ['cs'],
+      \ })
+    autocmd FileType cs setlocal omnifunc=lsp#complete signcolumn=yes
+    autocmd FileType cs nnoremap <buffer> gd         :LspDefinition<CR>
+    autocmd FileType cs nnoremap <buffer> gr         :LspReferences<CR>
+    autocmd FileType cs nnoremap <buffer> K          :LspHover<CR>
+    autocmd FileType cs nnoremap <buffer> <leader>rn :LspRename<CR>
+    autocmd FileType cs nnoremap <buffer> [d         :LspPreviousDiagnostic<CR>
+    autocmd FileType cs nnoremap <buffer> ]d         :LspNextDiagnostic<CR>
+  augroup END
+endif
