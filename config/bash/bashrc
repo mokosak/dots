@@ -8,7 +8,7 @@ case $- in *i*) ;; *) return ;; esac
 
 # ── history ──
 HISTFILE="$HOME/.bash_history"
-HISTSIZE=100000
+HISTSIZE=50000
 HISTFILESIZE=50000
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend cmdhist
