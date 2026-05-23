@@ -103,7 +103,23 @@ install_configs() {
 	copy config/slop/clearselect.frag       "$HOME/.config/slop/clearselect.frag"
 	copy config/slop/clearselect.vert       "$HOME/.config/slop/clearselect.vert"
 	copy config/picom/picom.conf            "$HOME/.config/picom/picom.conf"
+	copy config/gtk-3.0/settings.ini        "$HOME/.config/gtk-3.0/settings.ini"
+	copy config/gtk-4.0/settings.ini        "$HOME/.config/gtk-4.0/settings.ini"
+	copy config/gtk-3.0/gtk.css             "$HOME/.config/gtk-3.0/gtk.css"
+	copy config/gtk-4.0/gtk.css             "$HOME/.config/gtk-4.0/gtk.css"
 	copy config/fontconfig/fonts.conf       "$HOME/.config/fontconfig/fonts.conf"
+	copy config/icons/default/index.theme   "$HOME/.icons/default/index.theme"
+
+	# $HOME dotfiles - back the originals up once
+	for f in "$HOME/.gtkrc-2.0" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.xinitrc" "$HOME/.Xresources" "$HOME/.vimrc"; do
+		[ -e "$f" ] && [ ! -e "$f.bak-suckless" ] && cp -a "$f" "$f.bak-suckless"
+	done
+	copy config/gtkrc-2.0         "$HOME/.gtkrc-2.0"
+	copy config/bash/bashrc       "$HOME/.bashrc"
+	copy config/bash/bash_profile "$HOME/.bash_profile"
+	copy config/xinitrc           "$HOME/.xinitrc" 755
+	copy config/Xresources   "$HOME/.Xresources"
+	copy config/vim/vimrc    "$HOME/.vimrc"
 }
 
 # keyboard layout + boot to tty1, no greeter
