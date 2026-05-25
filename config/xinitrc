@@ -23,7 +23,6 @@ command -v mpd >/dev/null 2>&1 && ! pgrep -x mpd >/dev/null 2>&1 && mpd "$HOME/.
 command -v picom >/dev/null 2>&1 && picom --config "$HOME/.config/picom/picom.conf" &
 command -v dunst >/dev/null 2>&1 && dunst &
 command -v nightlight >/dev/null 2>&1 && ! pgrep -u "$USER" -f "nightlight daemon" >/dev/null 2>&1 && nightlight daemon >/tmp/nightlight.log 2>&1 &
-command -v dwm-hotkeys >/dev/null 2>&1 && dwm-hotkeys >/tmp/dwm-hotkeys.log 2>&1 &
 command -v dwmblocks >/dev/null 2>&1 && dwmblocks &
 command -v snixembed >/dev/null 2>&1 && ! pgrep -x snixembed >/dev/null 2>&1 && (sleep 2; snixembed) >/tmp/snixembed.log 2>&1 &
 command -v mullvad-vpn >/dev/null 2>&1 && ! pgrep -u "$USER" -f "/usr/lib/mullvad-vpn/app.asar" >/dev/null 2>&1 && (sleep 3; setsid mullvad-vpn --disable-gpu >/tmp/mullvad-vpn.log 2>&1 < /dev/null) &

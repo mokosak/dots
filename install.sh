@@ -117,30 +117,11 @@ EOF
 $sudo_cmd chmod 755 /usr/share/xsessions
 $sudo_cmd chmod 644 /usr/share/xsessions/dwm.desktop
 
-	cat config/greetd/config.toml | $sudo_cmd tee /etc/greetd/config.toml >/dev/null
-	cat config/logind/90-lid-hibernate.conf | $sudo_cmd tee /etc/systemd/logind.conf.d/90-lid-hibernate.conf >/dev/null
-	cat config/modprobe.d/processor-thermal.conf | $sudo_cmd tee /etc/modprobe.d/processor-thermal.conf >/dev/null
+cat config/greetd/config.toml | $sudo_cmd tee /etc/greetd/config.toml >/dev/null
+cat config/logind/90-lid-hibernate.conf | $sudo_cmd tee /etc/systemd/logind.conf.d/90-lid-hibernate.conf >/dev/null
+cat config/modprobe.d/processor-thermal.conf | $sudo_cmd tee /etc/modprobe.d/processor-thermal.conf >/dev/null
 
-	$sudo_cmd sh -c '
-		stamp=$(date +%Y%m%d-%H%M%S)
-		if [ -f /etc/mkinitcpio.d/linux-zen.preset ]; then
-			cp -a /etc/mkinitcpio.d/linux-zen.preset "/etc/mkinitcpio.d/linux-zen.preset.bak-suckless-$stamp"
-			sed -i \
-				-e "s/^default_uki=/#default_uki=/" \
-				-e "s/^default_options=\"--splash/#default_options=\"--splash/" \
-				-e "s/^fallback_uki=/#fallback_uki=/" \
-				/etc/mkinitcpio.d/linux-zen.preset
-		fi
-		if [ -d /boot/EFI/Linux ]; then
-			mkdir -p /boot/EFI/Linux-disabled-suckless
-			for uki in /boot/EFI/Linux/arch-linux-zen*.efi; do
-				[ -e "$uki" ] || continue
-				mv "$uki" "/boot/EFI/Linux-disabled-suckless/$(basename "$uki").$stamp"
-			done
-		fi
-	'
-
-	$sudo_cmd systemctl disable sddm.service lightdm.service display-manager.service >/dev/null 2>&1 || :
+$sudo_cmd systemctl disable sddm.service lightdm.service display-manager.service >/dev/null 2>&1 || :
 $sudo_cmd systemctl mask lightdm.service >/dev/null 2>&1 || :
 $sudo_cmd systemctl enable greetd.service >/dev/null 2>&1 || :
 
