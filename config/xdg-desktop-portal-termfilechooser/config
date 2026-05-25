@@ -1,5 +1,6 @@
 [filechooser]
-cmd=/usr/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+cmd=yazi-save-wrapper.sh
+create_help_file=0
 default_dir=$HOME/Downloads
 open_mode=suggested
 save_mode=suggested

@@ -10,29 +10,22 @@ vec4 sample_desktop(vec2 uv) {
 }
 
 vec4 blur_desktop(vec2 uv) {
-	float radius = 5.0;
-	vec4 color = vec4(0.0);
-	vec2 off1x = vec2(1.4117647 * radius, 0.0) / screenSize;
-	vec2 off2x = vec2(3.2941176 * radius, 0.0) / screenSize;
-	vec2 off3x = vec2(5.1764706 * radius, 0.0) / screenSize;
-	vec2 off1y = vec2(0.0, 1.4117647 * radius) / screenSize;
-	vec2 off2y = vec2(0.0, 3.2941176 * radius) / screenSize;
-	vec2 off3y = vec2(0.0, 5.1764706 * radius) / screenSize;
-
-	color += sample_desktop(uv) * 0.16;
-	color += sample_desktop(uv + off1x) * 0.11;
-	color += sample_desktop(uv - off1x) * 0.11;
-	color += sample_desktop(uv + off2x) * 0.06;
-	color += sample_desktop(uv - off2x) * 0.06;
-	color += sample_desktop(uv + off3x) * 0.03;
-	color += sample_desktop(uv - off3x) * 0.03;
-	color += sample_desktop(uv + off1y) * 0.11;
-	color += sample_desktop(uv - off1y) * 0.11;
-	color += sample_desktop(uv + off2y) * 0.06;
-	color += sample_desktop(uv - off2y) * 0.06;
-	color += sample_desktop(uv + off3y) * 0.03;
-	color += sample_desktop(uv - off3y) * 0.03;
-	return color;
+	const int taps = 48;
+	const float golden = 2.39996323;
+	float radius = 12.0;
+	vec2 texel = radius / screenSize;
+	vec4 color = sample_desktop(uv);
+	float total = 1.0;
+	for (int i = 0; i < taps; i++) {
+		float fi = float(i) + 0.5;
+		float r = sqrt(fi / float(taps));
+		float a = fi * golden;
+		vec2 offset = vec2(cos(a), sin(a)) * r * texel;
+		float w = exp(-r * r * 1.8);
+		color += sample_desktop(uv + offset) * w;
+		total += w;
+	}
+	return color / total;
 }
 
 void main() {

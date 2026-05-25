@@ -13,7 +13,7 @@ install_deps() {
 			xorg-server xorg-xinit xorg-xrdb xorg-xsetroot xorg-xrandr \
 			base-devel libx11 libxi libxinerama libxft libxext libxrandr libxrender fontconfig freetype2 \
 			git kitty zsh fzf yazi fastfetch greetd greetd-tuigreet \
-			dunst picom mpd mpc ncmpcpp pipewire pipewire-pulse wireplumber smartmontools \
+			dunst picom mpd mpc ncmpcpp playerctl pipewire pipewire-pulse wireplumber smartmontools \
 			networkmanager bluez bluez-utils brightnessctl unzip curl xdg-desktop-portal xdg-desktop-portal-gtk \
 			xwallpaper maim slop xclip xdotool xorg-xwininfo xorg-xev libnotify pulsemixer bluetui gammastep snixembed
 		if command -v yay >/dev/null 2>&1; then
@@ -25,7 +25,7 @@ install_deps() {
 			xserver-xorg-core xinit x11-xserver-utils \
 			build-essential libx11-dev libxi-dev libxinerama-dev libxft-dev libxext-dev libxrandr-dev libxrender-dev \
 			libfontconfig-dev libfreetype6-dev git kitty zsh fzf greetd \
-			dunst picom mpd mpc ncmpcpp smartmontools \
+			dunst picom mpd mpc ncmpcpp playerctl smartmontools \
 			pipewire pipewire-pulse wireplumber network-manager bluez brightnessctl unzip curl \
 			xwallpaper maim slop xclip xdotool x11-utils libnotify-bin gammastep
 		if apt-cache show fastfetch >/dev/null 2>&1; then
@@ -93,6 +93,7 @@ install -Dm644 config/icons/default/index.theme "$HOME/.icons/default/index.them
 install -Dm644 config/oh-my-zsh/custom/themes/ayu-mirage.zsh-theme "$HOME/.oh-my-zsh/custom/themes/ayu-mirage.zsh-theme"
 install -Dm644 config/xdg-desktop-portal/portals.conf "$HOME/.config/xdg-desktop-portal/portals.conf"
 install -Dm644 config/xdg-desktop-portal-termfilechooser/config "$HOME/.config/xdg-desktop-portal-termfilechooser/config"
+install -Dm755 config/xdg-desktop-portal-termfilechooser/yazi-save-wrapper.sh "$HOME/.config/xdg-desktop-portal-termfilechooser/yazi-save-wrapper.sh"
 
 backup "$HOME/.gtkrc-2.0"
 backup "$HOME/.zshrc"
