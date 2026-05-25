@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+dir=${1:-$HOME}
+[ -d "$dir" ] || dir=$HOME
+
+if command -v yazi >/dev/null 2>&1; then
+	exec kitty --class float --title yazi -e yazi "$dir"
+elif command -v lf >/dev/null 2>&1; then
+	exec kitty --class float --title lf -e lf "$dir"
+elif command -v ranger >/dev/null 2>&1; then
+	exec kitty --class float --title ranger -e ranger "$dir"
+fi
+
+exec kitty --class float --title files -e sh -c 'printf "%s\n" "install yazi, lf, or ranger"; exec sh'

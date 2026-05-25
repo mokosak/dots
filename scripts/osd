@@ -1,0 +1,34 @@
+#!/bin/sh
+mode=${1:-text}
+
+notify() {
+	if command -v dunstify >/dev/null 2>&1; then
+		dunstify "$@"
+	else
+		notify-send "$@"
+	fi
+}
+
+case "$mode" in
+	bar)
+		pct=${2:-0}
+		title=${3:-OSD}
+		value=${4:-"$pct%"}
+		timeout=${5:-850}
+		notify -a osd -u low -t "$timeout" \
+			-h "string:x-dunst-stack-tag:osd-$title" \
+			-h "int:value:$pct" "$title" "$value"
+		;;
+	text)
+		title=${2:-OSD}
+		body=${3:-}
+		timeout=${4:-1600}
+		notify -a osd -u low -t "$timeout" \
+			-h "string:x-dunst-stack-tag:osd-$title" "$title" "$body"
+		;;
+	*)
+		printf 'usage: osd bar <pct> <title> <value> [timeout]\n' >&2
+		printf '       osd text <title> <body> [timeout]\n' >&2
+		exit 2
+		;;
+esac

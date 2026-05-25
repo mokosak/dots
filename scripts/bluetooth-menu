@@ -1,0 +1,44 @@
+#!/bin/sh
+command -v bluetoothctl >/dev/null 2>&1 || exit 1
+
+menu() {
+	dmenu-theme -p "$1" -l "${2:-10}"
+}
+
+refresh() {
+	pkill -RTMIN+5 dwmblocks 2>/dev/null || :
+}
+
+choose_device() {
+	rows=$(bluetoothctl devices 2>/dev/null)
+	[ -n "$rows" ] || { notify-send "Bluetooth" "no known devices"; return; }
+	choice=$(printf '%s\n' "$rows" | menu "bluetooth" 10)
+	[ -n "$choice" ] || return
+	mac=$(printf '%s\n' "$choice" | awk '{ print $2 }')
+	name=$(printf '%s\n' "$choice" | cut -d' ' -f3-)
+	action=$(printf 'connect\ndisconnect\npair\ntrust\nremove\n' | menu "$name" 6)
+	[ -n "$action" ] || return
+	bluetoothctl "$action" "$mac" >/tmp/bluetooth-menu.log 2>&1
+	notify-send "Bluetooth" "$action $name"
+	refresh
+}
+
+while :; do
+	power=$(bluetoothctl show 2>/dev/null | awk -F': ' '/Powered:/ { print $2; exit }')
+	choice=$(printf 'devices\nscan for 10s\ntoggle power (%s)\nquit\n' "${power:-unknown}" | menu "bluetooth" 6)
+	case "$choice" in
+	devices) choose_device ;;
+	"scan for 10s")
+		bluetoothctl power on >/dev/null 2>&1
+		bluetoothctl scan on >/dev/null 2>&1
+		sleep 10
+		bluetoothctl scan off >/dev/null 2>&1
+		choose_device
+		;;
+	"toggle power"*)
+		[ "$power" = yes ] && bluetoothctl power off >/dev/null 2>&1 || bluetoothctl power on >/dev/null 2>&1
+		refresh
+		;;
+	quit|"") exit 0 ;;
+	esac
+done

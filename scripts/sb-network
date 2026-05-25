@@ -1,0 +1,42 @@
+#!/bin/sh
+if [ "${DWM_STATUS_CLICK:-0}" != 1 ]; then
+	BLOCK_BUTTON=
+fi
+
+nm_state() {
+	if command -v nmcli >/dev/null 2>&1; then
+		nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev status 2>/dev/null |
+			awk -F: '$3 == "connected" && $2 != "loopback" { print $2, $1, $4; exit }'
+		return
+	fi
+	for iface in /sys/class/net/*; do
+		name=${iface##*/}
+		[ "$name" = lo ] && continue
+		read -r state < "$iface/operstate" 2>/dev/null || continue
+		[ "$state" = up ] || continue
+		[ -d "$iface/wireless" ] && printf 'wifi %s %s\n' "$name" "$name" || printf 'ethernet %s %s\n' "$name" "$name"
+		return
+	done
+}
+
+set -- $(nm_state)
+kind=${1:-off}
+iface=${2:--}
+conn=${3:-}
+
+case "${BLOCK_BUTTON:-}" in
+1)
+	if command -v nmcli >/dev/null 2>&1; then
+		notify-send "Network" "$(nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev status 2>/dev/null | sed 's/:/  /g')"
+	else
+		notify-send "Network" "$kind $iface"
+	fi
+	;;
+2|3) setsid -f kitty -e nmtui >/dev/null 2>&1 ;;
+esac
+
+case "$kind" in
+wifi) printf 'NET WLAN\n' ;;
+ethernet) printf 'NET ETH\n' ;;
+*) printf 'NET OFF\n' ;;
+esac

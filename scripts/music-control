@@ -1,0 +1,29 @@
+#!/bin/sh
+cmd=${1:-toggle}
+
+refresh() {
+	pkill -RTMIN+6 dwmblocks 2>/dev/null || :
+}
+
+if command -v mpc >/dev/null 2>&1 && mpc status >/dev/null 2>&1; then
+	case "$cmd" in
+		toggle) mpc toggle >/dev/null ;;
+		next)   mpc next >/dev/null ;;
+		prev)   mpc prev >/dev/null ;;
+		stop)   mpc stop >/dev/null ;;
+	esac
+	now-playing
+	refresh
+	exit 0
+fi
+
+if command -v playerctl >/dev/null 2>&1; then
+	case "$cmd" in
+		toggle) playerctl play-pause ;;
+		next)   playerctl next ;;
+		prev)   playerctl previous ;;
+		stop)   playerctl stop ;;
+	esac
+	now-playing
+	refresh
+fi

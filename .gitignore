@@ -1,0 +1,6 @@
+*.o
+dwm/dwm
+dmenu/dmenu
+dmenu/stest
+slock/slock
+dwmblocks/dwmblocks

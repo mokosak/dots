@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ "${DWM_STATUS_CLICK:-0}" != 1 ]; then
+	BLOCK_BUTTON=
+fi
+
+case "${BLOCK_BUTTON:-}" in
+1) music-control toggle ;;
+2) setsid -f kitty -e ncmpcpp >/dev/null 2>&1 ;;
+3) now-playing ;;
+4) music-control prev ;;
+5) music-control next ;;
+esac
+
+if command -v mpc >/dev/null 2>&1 && mpc status >/dev/null 2>&1; then
+	current=$(mpc current 2>/dev/null)
+	[ -n "$current" ] || exit 0
+	state=$(mpc status 2>/dev/null | sed -n '2s/^\[\([^]]*\)\].*/\1/p')
+	label=MPD
+	[ "$state" = paused ] && label="MPD pause"
+	printf '%s %.38s\n' "$label" "$current"
+	exit 0
+fi
+
+command -v playerctl >/dev/null 2>&1 || exit 0
+status=$(playerctl status 2>/dev/null) || exit 0
+title=$(playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null)
+[ -n "$title" ] && [ "$title" != " - " ] || exit 0
+[ "$status" = Paused ] && label="MPRIS pause" || label="MPRIS"
+printf '%s %.38s\n' "$label" "$title"

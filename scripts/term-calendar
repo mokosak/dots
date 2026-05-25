@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+clear
+printf '\033[38;2;255;204;102m%s\033[0m\n\n' "$(date '+%A, %d %B %Y')"
+
+if cal -3 >/dev/null 2>&1; then
+	cal -3
+else
+	cal
+fi
+
+printf '\n\033[38;2;149;230;203mEnter closes\033[0m\n'
+IFS= read -r _

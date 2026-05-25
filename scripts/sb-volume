@@ -1,0 +1,22 @@
+#!/bin/sh
+command -v wpctl >/dev/null 2>&1 || exit 0
+
+if [ "${DWM_STATUS_CLICK:-0}" != 1 ]; then
+	BLOCK_BUTTON=
+fi
+
+case "${BLOCK_BUTTON:-}" in
+1) volume mute ;;
+2|3) setsid -f kitty --class float -T Mixer -e sh -lc 'command -v pulsemixer >/dev/null 2>&1 && exec pulsemixer; exec alsamixer' >/dev/null 2>&1 ;;
+4) volume up ;;
+5) volume down ;;
+esac
+
+set -- $(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '/Volume:/ { printf "%d %s\n", $2 * 100, $3 }')
+pct=${1:-0}
+muted=${2:-}
+if [ "$muted" = "[MUTED]" ]; then
+	printf 'VOL mute\n'
+else
+	printf 'VOL %s%%\n' "$pct"
+fi

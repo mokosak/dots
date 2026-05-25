@@ -1,0 +1,11 @@
+#!/bin/sh
+choice=$(printf 'lock\nhibernate\nsuspend\nlogout\nreboot\nshutdown\n' | dmenu-theme -p "exit:")
+
+case "$choice" in
+	lock) slock ;;
+	hibernate) slock & systemctl hibernate ;;
+	suspend) slock & systemctl suspend ;;
+	logout) pkill -TERM -u "$USER" ;;
+	reboot) systemctl reboot ;;
+	shutdown) systemctl poweroff ;;
+esac

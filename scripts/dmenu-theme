@@ -1,0 +1,6 @@
+#!/bin/sh
+exec /usr/local/bin/dmenu -i \
+	-fn "SpaceMono Nerd Font:size=11" \
+	-nb "#1f2430" -nf "#cbccc6" \
+	-sb "#252b38" -sf "#ffcc66" \
+	-bw 2 "$@"

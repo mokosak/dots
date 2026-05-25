@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+if command -v bluetui >/dev/null 2>&1; then
+	exec bluetui
+fi
+
+clear
+printf '\033[38;2;255;204;102mBluetooth\033[0m\n\n'
+bluetoothctl show 2>/dev/null | sed -n '1,12p' || true
+printf '\nConnected:\n'
+bluetoothctl devices Connected 2>/dev/null || true
+printf '\nPaired:\n'
+bluetoothctl devices Paired 2>/dev/null || true
+printf '\nCommands:\n'
+printf '  power on|off\n'
+printf '  scan on|off\n'
+printf '  connect MAC\n'
+printf '  disconnect MAC\n'
+printf '  trust MAC\n'
+printf '  remove MAC\n'
+printf '  quit\n\n'
+exec bluetoothctl

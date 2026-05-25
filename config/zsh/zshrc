@@ -1,0 +1,69 @@
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt appendhistory incappendhistory sharehistory hist_ignore_dups hist_reduce_blanks
+setopt autocd interactivecomments no_beep notify
+
+export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+ZSH_THEME="ayu-mirage"
+plugins=(git)
+DISABLE_AUTO_UPDATE="true"
+ZSH_DISABLE_COMPFIX=true
+
+if [ -r "$ZSH/oh-my-zsh.sh" ]; then
+	. "$ZSH/oh-my-zsh.sh"
+else
+	autoload -Uz colors && colors
+	setopt prompt_subst
+	PROMPT='%F{#95e6cb}%n%f%F{#707a8c}@%f%F{#73d0ff}%m%f %F{#ffcc66}%~%f %(?.%F{#95e6cb}.%F{#f28779})❯%f '
+	RPROMPT='%(?..%F{#f28779}exit:%?%f )%F{#707a8c}%D{%H:%M}%f'
+fi
+
+export EDITOR="${EDITOR:-vim}"
+export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+export SUDO_ASKPASS="${SUDO_ASKPASS:-$HOME/.local/bin/dmenupass}"
+export FZF_DEFAULT_OPTS='--height=45% --layout=reverse --border=sharp --color=fg:#cbccc6,bg:#1f2430,hl:#ffcc66,fg+:#ffffff,bg+:#252b38,hl+:#ffcc66,border:#707a8c,prompt:#95e6cb,pointer:#ffcc66,marker:#f28779'
+
+alias ls='ls --color=auto'
+alias ll='ls -lah --group-directories-first'
+alias la='ls -A --color=auto'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias pls='sudo'
+
+sudo() {
+	if [ -n "${DISPLAY:-}" ] && [ -x "${SUDO_ASKPASS:-}" ]; then
+		command sudo -A "$@"
+	else
+		command sudo "$@"
+	fi
+}
+
+mkcd() {
+	mkdir -p -- "$1" && cd -- "$1"
+}
+
+bindkey -v
+bindkey '^?' backward-delete-char
+bindkey '^H' backward-kill-word  # ctrl+backspace deletes whole word
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+
+for f in \
+	/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+	/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+	[ -r "$f" ] && . "$f" && break
+done
+for f in \
+	/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+	/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+	[ -r "$f" ] && . "$f" && break
+done
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#707a8c'
+
+if [[ -o interactive && -t 1 && -z ${SUCKLESS_NO_FETCH:-} ]]; then
+	command -v fetch >/dev/null 2>&1 && fetch
+fi

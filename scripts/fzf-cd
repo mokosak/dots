@@ -1,0 +1,13 @@
+#!/bin/sh
+# Global equivalent of zsh/fzf Alt-C: pick a directory, then open a shell there.
+exec kitty -e zsh -ic '
+fzf_opts="$FZF_DEFAULT_OPTS --reverse --walker=dir,follow,hidden --scheme=path ${FZF_ALT_C_OPTS-} +m"
+if [ "${FZF_ALT_C_COMMAND+x}" = x ]; then
+	dir="$(FZF_DEFAULT_COMMAND="$FZF_ALT_C_COMMAND" FZF_DEFAULT_OPTS="$fzf_opts" FZF_DEFAULT_OPTS_FILE= fzf)"
+else
+	dir="$(FZF_DEFAULT_OPTS="$fzf_opts" FZF_DEFAULT_OPTS_FILE= fzf)"
+fi
+[ -n "$dir" ] || exit 0
+builtin cd -- "$dir" || exit 1
+exec zsh
+'
