@@ -17,7 +17,7 @@ install_deps() {
 			networkmanager bluez bluez-utils brightnessctl unzip curl xdg-desktop-portal xdg-desktop-portal-gtk \
 			xwallpaper maim slop xclip xdotool xorg-xwininfo xorg-xev libnotify pulsemixer bluetui gammastep snixembed
 		if command -v yay >/dev/null 2>&1; then
-			yay -S --needed --noconfirm xdg-desktop-portal-termfilechooser || true
+			yay -S --needed --noconfirm xdg-desktop-portal-termfilechooser xkblayout-state-git || true
 		fi
 	elif command -v apt-get >/dev/null 2>&1; then
 		$sudo_cmd apt-get update

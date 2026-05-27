@@ -1,0 +1,14 @@
+#!/bin/sh
+# Notify on XKB layout change (requires xkblayout-state)
+command -v xkblayout-state >/dev/null 2>&1 || exit 0
+command -v notify-send >/dev/null 2>&1 || exit 0
+
+prev=""
+while true; do
+	cur=$(xkblayout-state print %s 2>/dev/null) || { sleep 1; continue; }
+	if [ "$cur" != "$prev" ] && [ -n "$prev" ]; then
+		notify-send -t 2000 -u low "Keyboard" "$cur"
+	fi
+	prev=$cur
+	sleep 0.2
+done
