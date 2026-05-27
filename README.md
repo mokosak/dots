@@ -63,6 +63,6 @@ cd my-suckless-setup
 
 builds dwm/dmenu/slock/dwmblocks from source, copies all configs and scripts, sets up greetd.
 
-** uninstaller
+## uninstaller
 
 theres no uninstaller because i dont plan on uninstalling.
