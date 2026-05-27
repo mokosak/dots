@@ -69,6 +69,7 @@ for dir in dwm dmenu slock dwmblocks; do
 	make -C "$dir"
 	$sudo_cmd make -C "$dir" install
 done
+install -Dm755 dwm/dwm "$HOME/.local/bin/dwm"
 
 mkdir -p "$HOME/.local/bin" "$HOME/.config" "$HOME/.local/share/mpd/playlists"
 for script in scripts/*; do
