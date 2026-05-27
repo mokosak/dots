@@ -24,16 +24,14 @@ install_deps() {
 		$sudo_cmd apt-get install -y \
 			xserver-xorg-core xinit x11-xserver-utils \
 			build-essential libx11-dev libxi-dev libxinerama-dev libxft-dev libxext-dev libxrandr-dev libxrender-dev \
-			libfontconfig-dev libfreetype6-dev git kitty zsh fzf greetd \
+			libfontconfig-dev libfreetype6-dev git kitty zsh fzf \
 			dunst picom mpd mpc ncmpcpp playerctl smartmontools \
 			pipewire pipewire-pulse wireplumber network-manager bluez brightnessctl unzip curl \
-			xwallpaper maim slop xclip xdotool x11-utils libnotify-bin gammastep
-		if apt-cache show fastfetch >/dev/null 2>&1; then
-			$sudo_cmd apt-get install -y fastfetch
-		fi
-		if apt-cache show yazi >/dev/null 2>&1; then
-			$sudo_cmd apt-get install -y yazi
-		fi
+			xdg-desktop-portal xdg-desktop-portal-gtk \
+			xwallpaper maim xclip xdotool x11-utils x11-apps libnotify-bin gammastep pulsemixer
+		for pkg in fastfetch yazi slop greetd greetd-tuigreet; do
+			apt-cache show "$pkg" >/dev/null 2>&1 && $sudo_cmd apt-get install -y "$pkg" || true
+		done
 	fi
 }
 
@@ -56,6 +54,17 @@ install_oh_my_zsh() {
 	git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
 }
 
+install_xkblayout_state() {
+	command -v xkblayout-state >/dev/null 2>&1 && return
+	command -v apt-get >/dev/null 2>&1 || return
+	tmp=$(mktemp -d)
+	git clone --depth=1 https://github.com/nonpop/xkblayout-state "$tmp/src" 2>/dev/null \
+		|| { rm -rf "$tmp"; return; }
+	make -C "$tmp/src" 2>/dev/null \
+		&& install -Dm755 "$tmp/src/xkblayout-state" "$HOME/.local/bin/xkblayout-state"
+	rm -rf "$tmp"
+}
+
 backup() {
 	[ -e "$1" ] || [ -L "$1" ] || return 0
 	[ -e "$1.bak-suckless" ] || cp -a "$1" "$1.bak-suckless"
@@ -64,6 +73,7 @@ backup() {
 install_deps
 install_font
 install_oh_my_zsh
+install_xkblayout_state
 
 for dir in dwm dmenu slock dwmblocks; do
 	make -C "$dir"
@@ -107,7 +117,7 @@ install -Dm644 config/zsh/zprofile "$HOME/.zprofile"
 install -Dm755 config/xinitrc "$HOME/.xinitrc"
 install -Dm644 config/Xresources "$HOME/.Xresources"
 
-$sudo_cmd mkdir -p /usr/share/xsessions /etc/greetd /etc/systemd/logind.conf.d /etc/modprobe.d
+$sudo_cmd mkdir -p /usr/share/xsessions /etc/systemd/logind.conf.d /etc/modprobe.d
 cat <<EOF | $sudo_cmd tee /usr/share/xsessions/dwm.desktop >/dev/null
 [Desktop Entry]
 Name=dwm
@@ -118,13 +128,17 @@ EOF
 $sudo_cmd chmod 755 /usr/share/xsessions
 $sudo_cmd chmod 644 /usr/share/xsessions/dwm.desktop
 
-cat config/greetd/config.toml | $sudo_cmd tee /etc/greetd/config.toml >/dev/null
 cat config/logind/90-lid-hibernate.conf | $sudo_cmd tee /etc/systemd/logind.conf.d/90-lid-hibernate.conf >/dev/null
 cat config/modprobe.d/processor-thermal.conf | $sudo_cmd tee /etc/modprobe.d/processor-thermal.conf >/dev/null
 
-$sudo_cmd systemctl disable sddm.service lightdm.service display-manager.service >/dev/null 2>&1 || :
-$sudo_cmd systemctl mask lightdm.service >/dev/null 2>&1 || :
-$sudo_cmd systemctl enable greetd.service >/dev/null 2>&1 || :
-
-echo "Installed. greetd is enabled for next boot and launches startx after login."
+if command -v greetd >/dev/null 2>&1; then
+	$sudo_cmd mkdir -p /etc/greetd
+	cat config/greetd/config.toml | $sudo_cmd tee /etc/greetd/config.toml >/dev/null
+	$sudo_cmd systemctl disable sddm.service lightdm.service display-manager.service >/dev/null 2>&1 || :
+	$sudo_cmd systemctl mask lightdm.service >/dev/null 2>&1 || :
+	$sudo_cmd systemctl enable greetd.service >/dev/null 2>&1 || :
+	echo "Installed. greetd is enabled for next boot."
+else
+	echo "Installed. greetd not found — log in and run: startx"
+fi
 echo "Open the music player with Super+m; the bar uses mpd/mpc when available."

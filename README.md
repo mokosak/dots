@@ -1,6 +1,6 @@
 # my suckless setup
 
-my personal dwm build + dotfiles. ayu mirage theme, everything patched and scripted the way i like it.
+my personal dwm build + dotfiles.
 
 ![screenshot](screenshot.png)
 
@@ -62,3 +62,7 @@ cd my-suckless-setup
 ```
 
 builds dwm/dmenu/slock/dwmblocks from source, copies all configs and scripts, sets up greetd.
+
+** uninstaller
+
+theres no uninstaller because i dont plan on uninstalling.
