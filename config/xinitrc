@@ -25,7 +25,5 @@ command -v dunst >/dev/null 2>&1 && dunst &
 command -v nightlight >/dev/null 2>&1 && ! pgrep -u "$USER" -f "nightlight daemon" >/dev/null 2>&1 && nightlight daemon >/tmp/nightlight.log 2>&1 &
 command -v dwmblocks >/dev/null 2>&1 && dwmblocks &
 command -v kb-watch >/dev/null 2>&1 && kb-watch >/tmp/kb-watch.log 2>&1 &
-command -v snixembed >/dev/null 2>&1 && ! pgrep -x snixembed >/dev/null 2>&1 && (sleep 2; snixembed) >/tmp/snixembed.log 2>&1 &
-command -v mullvad-vpn >/dev/null 2>&1 && ! pgrep -u "$USER" -f "/usr/lib/mullvad-vpn/app.asar" >/dev/null 2>&1 && (sleep 3; setsid mullvad-vpn --disable-gpu >/tmp/mullvad-vpn.log 2>&1 < /dev/null) &
 
 exec dwm

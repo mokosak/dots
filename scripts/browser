@@ -1,0 +1,12 @@
+#!/bin/sh
+# Open the preferred browser. Set $BROWSER to override.
+if [ -n "${BROWSER:-}" ] && command -v "$BROWSER" >/dev/null 2>&1; then
+	exec "$BROWSER" "$@"
+fi
+
+for b in librewolf mullvad-browser firefox-esr firefox chromium chromium-browser brave google-chrome-stable epiphany; do
+	command -v "$b" >/dev/null 2>&1 && exec "$b" "$@"
+done
+
+command -v xdg-open >/dev/null 2>&1 && exec xdg-open "${1:-about:blank}"
+exit 0

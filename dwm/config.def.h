@@ -74,9 +74,10 @@ static const char *dmenucmd[] = {
 	NULL
 };
 static const char *termcmd[]     = { "kitty", NULL };
-static const char *browsercmd[]  = { "mullvad-browser", NULL };
+static const char *browsercmd[]  = { "browser", NULL };
 static const char *fmcmd[]       = { "file-manager", NULL };
 static const char *musiccmd[]    = { "kitty", "-e", "ncmpcpp", NULL };
+static const char *ytcmd[]       = { "yt", NULL };
 static const char *lockcmd[]     = { "slock", NULL };
 static const char *exitcmd[]     = { "exit-menu", NULL };
 static const char *wallcmd[]     = { "wall", "menu", NULL };
@@ -134,6 +135,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = exitcmd } },
 	{ MODKEY,                       XK_m,      spawn,          {.v = musiccmd } },
+	{ MODKEY,                       XK_y,      spawn,          {.v = ytcmd } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = wallcmd } },
 	{ MODKEY,                       XK_x,      spawn,          {.v = lockcmd } },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = shotareacmd } },

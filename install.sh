@@ -12,10 +12,10 @@ install_deps() {
 		$sudo_cmd pacman -S --needed --noconfirm \
 			xorg-server xorg-xinit xorg-xrdb xorg-xsetroot xorg-xrandr \
 			base-devel libx11 libxi libxinerama libxft libxext libxrandr libxrender fontconfig freetype2 \
-			git kitty zsh fzf yazi fastfetch greetd greetd-tuigreet \
-			dunst picom mpd mpc ncmpcpp playerctl pipewire pipewire-pulse wireplumber smartmontools \
+			git kitty zsh zsh-autosuggestions zsh-syntax-highlighting fzf yazi fastfetch greetd greetd-tuigreet \
+			dunst picom mpd mpc ncmpcpp mpv yt-dlp ytfzf mpv-mpris jq playerctl pipewire pipewire-pulse wireplumber smartmontools \
 			networkmanager bluez bluez-utils brightnessctl unzip curl xdg-desktop-portal xdg-desktop-portal-gtk \
-			xwallpaper maim slop xclip xdotool xorg-xwininfo xorg-xev libnotify pulsemixer bluetui gammastep snixembed
+			xwallpaper maim slop xclip xdotool xorg-xwininfo xorg-xev libnotify pulsemixer bluetui gammastep
 		if command -v yay >/dev/null 2>&1; then
 			yay -S --needed --noconfirm xdg-desktop-portal-termfilechooser xkblayout-state-git || true
 		fi
@@ -25,11 +25,11 @@ install_deps() {
 			xserver-xorg-core xinit x11-xserver-utils \
 			build-essential libx11-dev libxi-dev libxinerama-dev libxft-dev libxext-dev libxrandr-dev libxrender-dev \
 			libfontconfig-dev libfreetype6-dev git kitty zsh fzf \
-			dunst picom mpd mpc ncmpcpp playerctl smartmontools \
+			dunst picom mpd mpc ncmpcpp mpv yt-dlp jq playerctl smartmontools \
 			pipewire pipewire-pulse wireplumber network-manager bluez brightnessctl unzip curl \
 			xdg-desktop-portal xdg-desktop-portal-gtk \
 			xwallpaper maim xclip xdotool x11-utils x11-apps libnotify-bin gammastep pulsemixer
-		for pkg in fastfetch yazi slop greetd greetd-tuigreet; do
+		for pkg in fastfetch yazi slop greetd greetd-tuigreet zsh-autosuggestions zsh-syntax-highlighting mpv-mpris; do
 			apt-cache show "$pkg" >/dev/null 2>&1 && $sudo_cmd apt-get install -y "$pkg" || true
 		done
 	fi
@@ -65,6 +65,17 @@ install_xkblayout_state() {
 	rm -rf "$tmp"
 }
 
+install_ytfzf() {
+	command -v ytfzf >/dev/null 2>&1 && return
+	command -v apt-get >/dev/null 2>&1 || return
+	command -v git >/dev/null 2>&1 || return
+	tmp=$(mktemp -d)
+	git clone --depth=1 https://github.com/pystardust/ytfzf "$tmp/src" 2>/dev/null \
+		|| { rm -rf "$tmp"; return; }
+	make -C "$tmp/src" install PREFIX="$HOME/.local" 2>/dev/null || true
+	rm -rf "$tmp"
+}
+
 backup() {
 	[ -e "$1" ] || [ -L "$1" ] || return 0
 	[ -e "$1.bak-suckless" ] || cp -a "$1" "$1.bak-suckless"
@@ -74,6 +85,7 @@ install_deps
 install_font
 install_oh_my_zsh
 install_xkblayout_state
+install_ytfzf
 
 for dir in dwm dmenu slock dwmblocks; do
 	make -C "$dir"
@@ -84,6 +96,11 @@ install -Dm755 dwm/dwm "$HOME/.local/bin/dwm"
 mkdir -p "$HOME/.local/bin" "$HOME/.config" "$HOME/.local/share/mpd/playlists"
 for script in scripts/*; do
 	install -Dm755 "$script" "$HOME/.local/bin/$(basename "$script")"
+done
+
+# Load mpv-mpris so mpv (yt playback) shows up in the bar and on media keys.
+for so in /usr/lib/mpv-mpris/mpris.so /usr/lib/*/mpv-mpris/mpris.so /etc/mpv/scripts/mpris.so; do
+	[ -e "$so" ] && { mkdir -p "$HOME/.config/mpv/scripts"; ln -sfn "$so" "$HOME/.config/mpv/scripts/mpris.so"; break; }
 done
 
 install -Dm644 config/kitty/kitty.conf "$HOME/.config/kitty/kitty.conf"

@@ -6,7 +6,7 @@ my personal dwm build + dotfiles.
 
 ## stack
 
-**dwm** · **dmenu** · **slock** · **dwmblocks** · kitty · yazi · picom · dunst · mpd/ncmpcpp · greetd
+**dwm** · **dmenu** · **slock** · **dwmblocks** · kitty · yazi · picom · dunst · mpd/ncmpcpp · mpv/ytfzf · greetd
 
 ## keybinds `Mod = Super`
 
@@ -17,6 +17,7 @@ my personal dwm build + dotfiles.
 | `Mod+B` | browser |
 | `Mod+F` | file manager |
 | `Mod+M` | music player |
+| `Mod+Y` | youtube search → mpv |
 | `Mod+W` | wallpaper picker |
 | `Mod+X` | lock screen |
 | `Mod+Space` | toggle layout |
@@ -43,6 +44,8 @@ clickable blocks: music (MPD + MPRIS) · network · bluetooth · volume · batte
 | `bt-console` | bluetui TUI for bluetooth |
 | `exit-menu` | lock / suspend / hibernate / logout / reboot / shutdown |
 | `file-manager` | opens yazi |
+| `browser` | opens `$BROWSER` or the first browser it finds |
+| `yt` | search youtube in a terminal, plays in mpv (no browser) |
 | `fzf-cd` | fuzzy jump to any directory in a new window |
 | `nightlight` | shifts color temperature at night automatically |
 | `kb-watch` | dunst notification when you switch keyboard layout |
@@ -53,7 +56,7 @@ clickable blocks: music (MPD + MPRIS) · network · bluetooth · volume · batte
 
 ## install
 
-needs Arch + `yay` for a couple AUR packages.
+works on Arch (uses `yay` for two AUR packages) or Debian (apt). the installer detects which you're on.
 
 ```sh
 git clone <repo>
