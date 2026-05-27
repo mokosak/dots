@@ -2,4 +2,4 @@
 # Private YouTube: search/browse in a terminal, play in mpv via yt-dlp.
 # Anonymous - no browser, no Google login, no cookies, no thumbnails.
 command -v ytfzf >/dev/null 2>&1 || { notify-send -a yt "YouTube" "ytfzf not installed"; exit 1; }
-exec kitty --class float -T youtube -e ytfzf "$@"
+exec kitty -T youtube -e ytfzf "$@"
