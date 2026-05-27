@@ -75,3 +75,8 @@ augroup dotnet_build
   autocmd FileType cs setlocal makeprg=dotnet\ build\ -nologo\ /clp:NoSummary
   autocmd FileType cs let &l:errorformat = '%f(%l\,%c): %trror %m,%f(%l\,%c): %tarning %m'
 augroup END
+
+" ---- Ctrl+Delete: delete the word to the right (kitty sends <Esc>[3;5~) ----
+execute "set <F33>=\e[3;5~"
+nnoremap <F33> dw
+inoremap <F33> <C-\><C-o>dw
