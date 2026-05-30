@@ -5,7 +5,7 @@ set nocompatible
 set encoding=utf-8
 set tabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set ignorecase smartcase incsearch hlsearch
-set scrolloff=5
+set scrolloff=8
 set hidden
 set mouse=a
 set splitright splitbelow
