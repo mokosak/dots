@@ -126,6 +126,9 @@ install_configs() {
 install_system() {
 	$doas_cmd mkdir -p /etc/X11/xorg.conf.d
 	$doas_cmd cp config/X11/xorg.conf.d/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
+	$doas_cmd chsh -s /bin/bash "$(id -un)" >/dev/null 2>&1 || true
+	$doas_cmd systemctl set-default multi-user.target >/dev/null
+	$doas_cmd systemctl enable getty@tty1.service >/dev/null 2>&1 || true
 }
 
 install_deps
