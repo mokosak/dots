@@ -25,6 +25,10 @@ small suckless setup.
 | `print` / `shift+print` | full screenshot / screenshot menu |
 | media keys | volume · brightness · playback |
 
+## status bar
+
+made using dwmblocks - its clickable.
+
 ## install
 
 ```sh
