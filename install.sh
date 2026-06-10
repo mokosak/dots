@@ -1,4 +1,7 @@
 #!/bin/sh
+# build dwm/dmenu/st/slock/dwmblocks, drop the scripts and configs in place.
+# no display manager - log in on tty1 and startx fires from ~/.bash_profile.
+# arch only. run from the repo root: ./install.sh
 set -eu
 
 cd "$(dirname "$0")"
@@ -139,3 +142,5 @@ build_suckless
 install_scripts
 install_configs
 install_system
+
+echo "done. log out (or reboot) - tty1 starts x. lock with mod+x."
