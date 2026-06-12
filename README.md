@@ -2,6 +2,10 @@
 
 small suckless setup.
 
+![screenshot](screenshot.png)
+
+theme is ayu mirage with a green accent.
+
 ## keybinds (mod = super)
 
 | key | does |
