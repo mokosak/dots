@@ -1,21 +1,17 @@
-/* See LICENSE file for copyright and license details. */
-
-/* Constants */
 #define TERMINAL "st"
 #define TERMCLASS "St"
 #define BROWSER "firefox"
 
-/* appearance */
-static unsigned int borderpx  = 3;        /* border pixel of windows */
-static unsigned int snap      = 32;       /* snap pixel */
+static unsigned int borderpx  = 3;
+static unsigned int snap      = 32;
 static unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
-static int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
-static int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
-static int showbar            = 1;        /* 0 means no bar */
-static int topbar             = 1;        /* 0 means bottom bar */
+static int swallowfloating    = 0;
+static int smartgaps          = 0;
+static int showbar            = 1;
+static int topbar             = 1;
 static char *fonts[]          = { "monospace:size=10", "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true"  };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
@@ -24,7 +20,6 @@ static char selfgcolor[]            = "#eeeeee";
 static char selbordercolor[]        = "#770000";
 static char selbgcolor[]            = "#005577";
 static char *colors[][3] = {
-       /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
        [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
@@ -59,11 +54,10 @@ static const Rule rules[] = {
 	{ TERMCLASS,  "spcalc",    NULL,       	 SPTAG(1),    1,           1,          0,         -1 },
 };
 
-/* layout(s) */
-static float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static int nmaster     = 1;    /* number of clients in master area */
-static int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+static float mfact     = 0.55;
+static int nmaster     = 1;
+static int resizehints = 0;
+static const int lockfullscreen = 1;
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
 static const Layout layouts[] = {
@@ -84,7 +78,6 @@ static const Layout layouts[] = {
 	{ NULL,		NULL },
 };
 
-/* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -100,10 +93,8 @@ static const Layout layouts[] = {
 	/* { MOD, XK_z,     ACTION##stack, {.i = 2 } }, \ */
 	/* { MOD, XK_x,     ACTION##stack, {.i = -1 } }, */
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-/* commands */
 static const char *termcmd[]  = { TERMINAL, NULL };
 
 /*
@@ -135,9 +126,6 @@ ResourcePref resources[] = {
 #include "shiftview.c"
 
 static const Key keys[] = {
-	/* modifier                     key            function                argument */
-	STACKKEYS(MODKEY,                              focus)
-	STACKKEYS(MODKEY|ShiftMask,                    push)
 	/* { MODKEY|ShiftMask,		XK_Escape,     spawn,	               SHCMD("") }, */
 	{ MODKEY,			XK_grave,      spawn,	               {.v = (const char*[]){ "dmenuunicode", NULL } } },
 	/* { MODKEY|ShiftMask,		XK_grave,      togglescratch,	       SHCMD("") }, */
@@ -307,8 +295,6 @@ static const Key keys[] = {
 
 };
 
-/* button definitions */
-/* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static const Button buttons[] = {
 	/* click                event mask           button          function        argument */
 #ifndef __OpenBSD__
@@ -334,4 +320,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,		0,		     Button5,	     shiftview,      {.i = 1} },
 	{ ClkRootWin,		0,		     Button2,	     togglebar,      {0} },
 };
-
