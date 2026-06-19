@@ -4,10 +4,10 @@
 
 static unsigned int borderpx  = 3;
 static unsigned int snap      = 32;
-static unsigned int gappih    = 20;       /* horiz inner gap between windows */
-static unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
+static unsigned int gappih    = 12;
+static unsigned int gappiv    = 12;
+static unsigned int gappoh    = 6;
+static unsigned int gappov    = 6;
 static int swallowfloating    = 0;
 static int smartgaps          = 0;
 static int showbar            = 1;
