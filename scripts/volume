@@ -1,0 +1,36 @@
+#!/bin/sh
+sink=@DEFAULT_AUDIO_SINK@
+source=@DEFAULT_AUDIO_SOURCE@
+step=5%
+max=1.0
+
+refresh() {
+	pkill -RTMIN+3 dwmblocks 2>/dev/null || :
+}
+
+sink_pct() {
+	wpctl get-volume "$sink" 2>/dev/null |
+		awk '/Volume:/ { printf "%d %s\n", $2 * 100, $3 }'
+}
+
+case "$1" in
+	up)   wpctl set-mute "$sink" 0; wpctl set-volume -l "$max" "$sink" "$step+" ;;
+	down) wpctl set-mute "$sink" 0; wpctl set-volume -l "$max" "$sink" "$step-" ;;
+	mute) wpctl set-mute "$sink" toggle ;;
+	mic)
+		wpctl set-mute "$source" toggle
+		state=$(wpctl get-volume "$source" 2>/dev/null | awk '{ print $3 }')
+		[ "$state" = "[MUTED]" ] && value="Muted" || value="Live"
+		osd text "Microphone" "$value" 900
+		refresh
+		exit 0
+		;;
+	*) printf 'usage: volume up|down|mute|mic\n' >&2; exit 2 ;;
+esac
+
+set -- $(sink_pct)
+pct=${1:-0}
+muted=${2:-}
+[ "$muted" = "[MUTED]" ] && value="Muted" || value="$pct%"
+osd bar "$pct" "Volume" "$value" 850
+refresh

@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ "${DWM_STATUS_CLICK:-0}" != 1 ]; then
+	BLOCK_BUTTON=
+fi
+
+case "${BLOCK_BUTTON:-}" in
+1)
+	notify-send -a clock -t 3000 "Date" "$(date '+%A, %d %B %Y')"
+	;;
+2|3)
+	setsid -f st -c float -t Calendar -g 70x46 -e term-calendar >/dev/null 2>&1
+	;;
+esac
+
+date '+%H:%M'

@@ -1,0 +1,82 @@
+" ~/.vimrc — plain vim, no plugins, just nice defaults. Ayu-Mirage tinted.
+
+" ---- behaviour ----
+set nocompatible
+set encoding=utf-8
+set tabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set ignorecase smartcase incsearch hlsearch
+set scrolloff=5
+set hidden
+set mouse=a
+set splitright splitbelow
+set wildmenu wildmode=longest:full,full
+set noswapfile
+set undofile undodir=~/.cache/vim/undo
+silent !mkdir -p ~/.cache/vim/undo
+syntax on
+filetype plugin indent on
+
+" ---- dynamic (hybrid) line numbers ----
+" Relative numbers while moving around (fast jumps like 5j), but switch to plain
+" absolute numbers in insert mode and when the window loses focus.
+set number relativenumber
+set cursorline
+augroup hybrid_numbers
+  autocmd!
+  autocmd InsertEnter,WinLeave,FocusLost * if &number | set norelativenumber | endif
+  autocmd InsertLeave,WinEnter,FocusGained * if &number | set relativenumber | endif
+augroup END
+
+" ---- look (Ayu Mirage, no colorscheme plugin needed) ----
+set termguicolors
+highlight Normal       guibg=#1f2430 guifg=#cbccc6
+highlight LineNr       guifg=#707a8c
+highlight CursorLineNr guifg=#87d96c gui=bold
+highlight CursorLine   guibg=#252b38
+highlight Comment      guifg=#5c6773 gui=italic
+highlight Visual       guibg=#33415e
+highlight Search       guibg=#87d96c guifg=#1f2430
+highlight StatusLine   guibg=#87d96c guifg=#1f2430 gui=bold
+highlight StatusLineNC guibg=#252b38 guifg=#707a8c
+
+" ---- statusline (built-in, shows file, flags, position) ----
+set laststatus=2 noshowmode
+set statusline=\ %f\ %m%r%h\ %=\ %y\ %l:%c\ \ %p%%\
+
+" ---- a couple of handy maps ----
+let mapleader = " "
+nnoremap <leader>w :w<CR>
+nnoremap <leader><space> :nohlsearch<CR>
+
+" ---- C# : LSP (csharp-ls) + dotnet build → quickfix ----
+" lean stack: vim-lsp + async.vim as native packages (~/.vim/pack), no node/coc.
+let s:csharp_ls = expand('~/.dotnet/tools/csharp-ls')
+if executable(s:csharp_ls)
+  augroup lsp_csharp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'csharp-ls',
+      \ 'cmd': {server_info->[s:csharp_ls]},
+      \ 'allowlist': ['cs'],
+      \ })
+    autocmd FileType cs setlocal omnifunc=lsp#complete signcolumn=yes
+    autocmd FileType cs nnoremap <buffer> gd         :LspDefinition<CR>
+    autocmd FileType cs nnoremap <buffer> gr         :LspReferences<CR>
+    autocmd FileType cs nnoremap <buffer> K          :LspHover<CR>
+    autocmd FileType cs nnoremap <buffer> <leader>rn :LspRename<CR>
+    autocmd FileType cs nnoremap <buffer> [d         :LspPreviousDiagnostic<CR>
+    autocmd FileType cs nnoremap <buffer> ]d         :LspNextDiagnostic<CR>
+  augroup END
+endif
+
+" dotnet build → quickfix  (:make, then :copen / :cnext / :cprev)
+augroup dotnet_build
+  autocmd!
+  autocmd FileType cs setlocal makeprg=dotnet\ build\ -nologo\ /clp:NoSummary
+  autocmd FileType cs let &l:errorformat = '%f(%l\,%c): %trror %m,%f(%l\,%c): %tarning %m'
+augroup END
+
+" ---- Ctrl+Delete: delete the word to the right (kitty sends <Esc>[3;5~) ----
+execute "set <F33>=\e[3;5~"
+nnoremap <F33> dw
+inoremap <F33> <C-\><C-o>dw
