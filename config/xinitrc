@@ -1,0 +1,34 @@
+#!/bin/sh
+export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+export _JAVA_AWT_WM_NONREPARENTING=1
+export XDG_CURRENT_DESKTOP=dwm
+export DESKTOP_SESSION=dwm
+export XDG_SESSION_TYPE=x11
+export GTK_USE_PORTAL=1
+export NO_AT_BRIDGE=1          # GTK3: don't connect to the AT-SPI accessibility bus
+export GTK_A11Y=none           # GTK4: disable the accessibility bridge
+
+# Per-session logs go to the mode-700 runtime dir (wiped at logout), not /tmp.
+log=${XDG_RUNTIME_DIR:-/tmp}
+
+[ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
+command -v kb-layout >/dev/null 2>&1 && kb-layout apply
+command -v kb-layout >/dev/null 2>&1 && ! pgrep -u "$USER" -f "kb-layout daemon" >/dev/null 2>&1 && kb-layout daemon >"$log/kb-layout.log" 2>&1 &
+command -v wall >/dev/null 2>&1 && wall apply >/dev/null 2>&1 || xsetroot -solid "#1f2430"
+command -v xsetroot >/dev/null 2>&1 && xsetroot -cursor_name left_ptr
+command -v bluetoothctl >/dev/null 2>&1 && bluetoothctl power off >/dev/null 2>&1 || :
+command -v wpctl >/dev/null 2>&1 && wpctl set-mute @DEFAULT_AUDIO_SINK@ 1 >/dev/null 2>&1 || :
+command -v wpctl >/dev/null 2>&1 && wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1 >/dev/null 2>&1 || :
+
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+	dbus-update-activation-environment --systemd DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS \
+		XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1 || :
+fi
+
+command -v mpd >/dev/null 2>&1 && ! pgrep -x mpd >/dev/null 2>&1 && mpd "$HOME/.config/mpd/mpd.conf" >"$log/mpd.log" 2>&1 &
+command -v picom >/dev/null 2>&1 && picom --config "$HOME/.config/picom/picom.conf" &
+command -v dunst >/dev/null 2>&1 && dunst &
+command -v nightlight >/dev/null 2>&1 && ! pgrep -u "$USER" -f "nightlight daemon" >/dev/null 2>&1 && nightlight daemon >"$log/nightlight.log" 2>&1 &
+command -v dwmblocks >/dev/null 2>&1 && dwmblocks &
+
+exec dwm

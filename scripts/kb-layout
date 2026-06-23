@@ -1,0 +1,52 @@
+#!/bin/sh
+# kb-layout — keep the keyboard layout applied and notify when you switch it.
+#   kb-layout apply    set the layout now (run once at login)
+#   kb-layout daemon   apply, then watch: re-apply when a keyboard is plugged in,
+#                      and pop a notification each time you toggle layout
+# Toggle layouts with Alt+Shift. Ctrl+Alt+Backspace kills X (terminate option).
+# Set KB_LAYOUT / KB_MODEL in the environment to change the defaults.
+set -u
+
+layout=${KB_LAYOUT:-us,sk}
+model=${KB_MODEL:-pc105+inet}
+
+apply() {
+	setxkbmap -layout "$layout" -model "$model" \
+		-option grp:alt_shift_toggle -option terminate:ctrl_alt_bksp >/dev/null 2>&1
+}
+
+# Name of the active layout (e.g. "English (US)"); empty if xkblayout-state is missing.
+group_name() {
+	command -v xkblayout-state >/dev/null 2>&1 && xkblayout-state print %s 2>/dev/null
+}
+
+# A fingerprint of the attached keyboards, so we notice hotplug.
+kbd_fingerprint() {
+	xinput list 2>/dev/null | grep -i 'slave .*keyboard' | grep -vi 'XTEST' | sort
+}
+
+daemon() {
+	apply
+	last_kbd=$(kbd_fingerprint)
+	last_grp=$(group_name)
+	while :; do
+		sleep 0.4
+		kbd=$(kbd_fingerprint)
+		if [ "$kbd" != "$last_kbd" ]; then
+			apply
+			last_kbd=$kbd
+		fi
+		grp=$(group_name)
+		if [ -n "$grp" ] && [ "$grp" != "$last_grp" ]; then
+			[ -n "$last_grp" ] && command -v notify-send >/dev/null 2>&1 &&
+				notify-send -t 1500 -u low "Keyboard" "$grp"
+			last_grp=$grp
+		fi
+	done
+}
+
+case "${1:-apply}" in
+	apply)  apply ;;
+	daemon) daemon ;;
+	*) printf 'usage: kb-layout [apply|daemon]\n' >&2; exit 2 ;;
+esac

@@ -1,0 +1,16 @@
+#!/bin/sh
+step=5
+
+case "$1" in
+	up)   brightnessctl set "$step%+" >/dev/null ;;
+	down) brightnessctl set "$step%-" >/dev/null ;;
+	*) printf 'usage: brightness up|down\n' >&2; exit 2 ;;
+esac
+
+pct=$(brightnessctl -m 2>/dev/null | awk -F, '{ gsub(/%/, "", $4); print $4; exit }')
+if [ -z "$pct" ]; then
+	cur=$(cat /sys/class/backlight/*/brightness 2>/dev/null | sed -n '1p')
+	max=$(cat /sys/class/backlight/*/max_brightness 2>/dev/null | sed -n '1p')
+	pct=$(awk -v c="$cur" -v m="$max" 'BEGIN { if (m > 0) printf "%d", c * 100 / m; else print 0 }')
+fi
+osd bar "$pct" "Brightness" "$pct%" 850

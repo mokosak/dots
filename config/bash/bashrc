@@ -1,0 +1,84 @@
+# ~/.bashrc — interactive bash (ble.sh)
+
+# interactive shells only
+case $- in *i*) ;; *) return ;; esac
+
+# ── ble.sh: source first with --noattach, ble-attach at the very end ──
+[[ $- == *i* ]] && source "$HOME/.local/share/blesh/ble.sh" --noattach
+
+# ── history ──
+HISTFILE="$HOME/.bash_history"
+HISTSIZE=50000
+HISTFILESIZE=50000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend cmdhist
+
+# ── shell options (autocd etc. — matches the old zsh setopts) ──
+shopt -s autocd cdspell checkwinsize globstar
+
+# ── environment ──
+export EDITOR="${EDITOR:-vim}"
+export FZF_DEFAULT_OPTS='--height=45% --layout=reverse --border=sharp --color=fg:#cbccc6,bg:#1f2430,hl:#87d96c,fg+:#ffffff,bg+:#252b38,hl+:#87d96c,border:#707a8c,prompt:#95e6cb,pointer:#87d96c,marker:#f28779'
+
+# ── aliases ──
+alias ls='ls --color=auto'
+alias ll='ls -lah --group-directories-first'
+alias la='ls -A --color=auto'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias pls='doas'
+mkcd() { mkdir -p -- "$1" && cd -- "$1"; }
+
+# doas with sudo-style password retries (opendoas asks once then exits).
+# Pre-auths with up to 3 tries; the persist cache then runs the real command.
+doas() {
+	case " $* " in *" -n "*) command doas "$@"; return;; esac   # leave -n calls alone
+	local i
+	for i in 1 2 3; do
+		command doas true 2>/dev/null && break
+		[ "$i" = 3 ] && { echo "doas: 3 incorrect attempts" >&2; return 1; }
+		echo "Sorry, try again." >&2
+	done
+	command doas "$@"
+}
+
+# ── prompt: Starship-style, two-line, git-aware (pure bash, Spleen-safe text) ──
+PROMPT_DIRTRIM=3                # show last 3 path components, like starship
+__sl_git() {
+	git rev-parse --is-inside-work-tree &>/dev/null || return
+	local br dirty
+	br=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null) || return
+	[ -n "$(git status --porcelain --ignore-submodules=dirty 2>/dev/null)" ] && dirty=' *'
+	printf ' \[\e[38;2;112;122;140m\]on \[\e[38;2;212;191;255m\]%s\[\e[38;2;242;135;121m\]%s\[\e[0m\]' "$br" "$dirty"
+}
+__sl_prompt() {
+	local ret=$?
+	local dim='\[\e[38;2;112;122;140m\]' grn='\[\e[1;38;2;135;217;108m\]' blu='\[\e[38;2;115;208;255m\]'
+	local rst='\[\e[0m\]' arr host=''
+	[ "$ret" = 0 ] && arr='\[\e[38;2;135;217;108m\]' || arr='\[\e[38;2;242;135;121m\]'
+	[ -n "${SSH_CONNECTION:-}" ] && host="${blu}\u@\h${dim} in ${rst}"
+	PS1="\n${host}${grn}\w${rst}$(__sl_git)\n${arr}❯${rst} "
+	if [[ ${BLE_VERSION-} ]]; then
+		if [ "$ret" = 0 ]; then
+			bleopt prompt_rps1='\[\e[38;2;112;122;140m\]\D{%H:%M}\[\e[0m\]'
+		else
+			bleopt prompt_rps1="\[\e[38;2;242;135;121m\]exit:$ret \[\e[38;2;112;122;140m\]\D{%H:%M}\[\e[0m\]"
+		fi
+	fi
+}
+PROMPT_COMMAND='__sl_prompt; history -a'
+
+# ── ble.sh look: autosuggestion in dim gray (was ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE) ──
+if [[ ${BLE_VERSION-} ]]; then
+	ble-face auto_complete='fg=#707a8c' 2>/dev/null
+fi
+
+# ── greeter ──
+if [[ -t 1 && -z ${SUCKLESS_NO_FETCH:-} ]]; then
+	command -v fetch >/dev/null 2>&1 && fetch
+fi
+
+# ── attach ble.sh (must stay last) ──
+[[ ${BLE_VERSION-} ]] && ble-attach

@@ -1,0 +1,66 @@
+#!/bin/sh
+set -eu
+
+start_hour=${NIGHTLIGHT_START:-21}
+end_hour=${NIGHTLIGHT_END:-7}
+night_temp=${NIGHTLIGHT_TEMP:-4200}
+state_file=${XDG_RUNTIME_DIR:-/tmp}/nightlight-state
+
+is_night() {
+	hour=$(date +%H)
+	hour=$((10#$hour))
+	if [ "$start_hour" -gt "$end_hour" ]; then
+		[ "$hour" -ge "$start_hour" ] || [ "$hour" -lt "$end_hour" ]
+	else
+		[ "$hour" -ge "$start_hour" ] && [ "$hour" -lt "$end_hour" ]
+	fi
+}
+
+apply_state() {
+	if is_night; then
+		wanted=night
+	else
+		wanted=day
+	fi
+
+	current=$(cat "$state_file" 2>/dev/null || true)
+	[ "$current" = "$wanted" ] && return 0
+
+	if [ "$wanted" = night ]; then
+		gammastep -P -O "$night_temp" >/dev/null 2>&1
+	else
+		gammastep -x >/dev/null 2>&1
+	fi
+	printf '%s\n' "$wanted" > "$state_file"
+}
+
+case "${1:-apply}" in
+	apply)
+		apply_state
+		;;
+	daemon)
+		while :; do
+			apply_state
+			sleep 300
+		done
+		;;
+	on)
+		gammastep -P -O "$night_temp" >/dev/null 2>&1
+		printf 'night\n' > "$state_file"
+		;;
+	off)
+		gammastep -x >/dev/null 2>&1
+		printf 'day\n' > "$state_file"
+		;;
+	status)
+		if is_night; then
+			printf 'night\n'
+		else
+			printf 'day\n'
+		fi
+		;;
+	*)
+		printf 'usage: nightlight [apply|daemon|on|off|status]\n' >&2
+		exit 2
+		;;
+esac

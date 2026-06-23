@@ -1,0 +1,18 @@
+#!/bin/sh
+command -v ytfzf >/dev/null 2>&1 || { notify-send -a yt "YouTube" "ytfzf not installed"; exit 1; }
+
+if [ "$#" -eq 0 ]; then
+	picker=dmenu
+	command -v dmenu -i -bw 2 >/dev/null 2>&1 && picker=dmenu -i -bw 2
+	mode=$(printf '%s\n' 'play video' 'play audio' 'download video' 'download audio' |
+		$picker -p 'youtube:' -i)
+	case "$mode" in
+	'play video') ;;
+	'play audio') set -- -m ;;
+	'download video') mkdir -p "$HOME/Videos"; set -- -d "--ytdl-opts=-P $HOME/Videos --merge-output-format mp4" ;;
+	'download audio') mkdir -p "$HOME/Music"; set -- -m -d "--ytdl-opts=-P $HOME/Music --audio-format mp3" ;;
+	*) exit 0 ;;
+	esac
+fi
+
+exec st -t youtube -e ytfzf "$@"

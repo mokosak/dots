@@ -1,0 +1,9 @@
+*.o
+dwm/dwm
+dmenu/dmenu
+dmenu/stest
+st/st
+slock/slock
+dwmblocks/dwmblocks
+__pycache__/
+*.pyc

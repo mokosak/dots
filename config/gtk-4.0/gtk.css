@@ -1,0 +1,10 @@
+* {
+  border-radius: 0;
+}
+
+tooltip,
+tooltip.background {
+  background-color: #1f2430;
+  color: #cbccc6;
+  border: 1px solid #707a8c;
+}

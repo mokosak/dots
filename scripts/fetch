@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+if ! command -v fastfetch >/dev/null 2>&1; then
+	exit 0
+fi
+
+config=$HOME/.config/fastfetch/config.jsonc
+logo=$HOME/.config/fastfetch/tux.txt
+
+if [ -r "$config" ] && [ -r "$logo" ]; then
+	exec fastfetch --config "$config" --file-raw "$logo" --logo-padding-right 3 "$@"
+fi
+
+exec fastfetch "$@"
