@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	3) notify-send "💡 Brightness module" "\- Shows current brightness level ☀️." ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+set -- /sys/class/backlight/*/
+
+# Current brightness
+read -r curr_brightness <"${1%/}/brightness"
+
+# Max brightness
+read -r max_brightness <"${1%/}/max_brightness"
+
+# Brightness percentage
+brightness_per=$((100 * curr_brightness / max_brightness))
+
+printf "💡%d%%\n" "$brightness_per"
