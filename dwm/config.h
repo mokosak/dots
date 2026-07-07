@@ -100,7 +100,6 @@ ResourcePref resources[] = {
 };
 
 #include <X11/XF86keysym.h>
-#include "shiftview.c"
 
 static const Key keys[] = {
 	{ MODKEY,			XK_Return,     spawn,                  {.v = termcmd } },
