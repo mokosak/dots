@@ -11,7 +11,7 @@ all: dwm
 .c.o:
 	${CC} -c ${CFLAGS} $<
 
-${OBJ}: config.h config.mk
+${OBJ}: config.h config.mk vanitygaps.c
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
@@ -21,8 +21,8 @@ clean:
 
 dist: clean
 	mkdir -p dwm-${VERSION}
-	cp -R LICENSE Makefile README config.mk\
-		dwm.1 drw.h util.h ${SRC} transient.c dwm-${VERSION}
+	cp -R LICENSE Makefile config.mk config.h\
+		dwm.1 drw.h util.h ${SRC} vanitygaps.c dwm-${VERSION}
 	tar -cf dwm-${VERSION}.tar dwm-${VERSION}
 	gzip dwm-${VERSION}.tar
 	rm -rf dwm-${VERSION}
@@ -33,12 +33,9 @@ install: all
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
-	mkdir -p ${DESTDIR}${PREFIX}/share/dwm
-	install -Dm644 ./larbs.mom ${DESTDIR}${PREFIX}/share/dwm
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
-		${DESTDIR}${PREFIX}/share/dwm/larbs.mom\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 .PHONY: all clean dist install uninstall

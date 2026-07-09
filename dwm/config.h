@@ -46,21 +46,10 @@ static const int lockfullscreen = 1;
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
 static const Layout layouts[] = {
-	/* symbol     arrange function */
-	{ "[]=",	tile },	                /* Default: Master on left, slaves on right */
-	{ "TTT",	bstack },               /* Master on top, slaves on bottom */
-
-	{ "[@]",	spiral },               /* Fibonacci spiral */
-	{ "[\\]",	dwindle },              /* Decreasing in size right and leftward */
-
-	{ "[D]",	deck },	                /* Master on left, slaves in monocle-like mode on right */
-	{ "[M]",	monocle },              /* All windows on top of eachother */
-
-	{ "|M|",	centeredmaster },               /* Master in middle, slaves on sides */
-	{ ">M>",	centeredfloatingmaster },       /* Same but master floats */
-
-	{ "><>",	NULL },	                /* no layout function means floating behavior */
-	{ NULL,		NULL },
+	{ "[]=",	tile },
+	{ "><>",	NULL },
+	{ "[M]",	monocle },
+	{ "|M|",	centeredmaster },
 };
 
 #define MODKEY Mod4Mask
