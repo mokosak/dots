@@ -11,6 +11,7 @@ dbus-update-activation-environment --systemd DISPLAY XAUTHORITY \
 	XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1
 
 xrdb -merge "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources"
+setbg &
 
 for program in picom dunst dwmblocks; do
 	pidof -sx "$program" || "$program" &
