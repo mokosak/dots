@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# A dmenu wrapper script for system functions.
+export WM="dwm"
+case "$(readlink -f /sbin/init)" in
+	*systemd*) ctl='systemctl' ;;
+	*) ctl='loginctl' ;;
+esac
+
+wmpid(){ # This function is needed if there are multiple instances of the window manager.
+	tree="$(pstree -ps $$)"
+	tree="${tree#*$WM(}"
+	echo "${tree%%)*}"
+}
+
+lock(){
+	was_muted="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -o 'MUTED' && echo 1 || echo 0)"
+	mpc pause & pauseallmpv &
+	wpctl set-mute @DEFAULT_AUDIO_SINK@ 1 &
+	slock
+	[ "$was_muted" -eq 0 ] && wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+	pkill -RTMIN+10 "${STATUSBAR:-dwmblocks}"
+}
+
+case "$(printf "🔒 lock\n🚪 leave $WM\n♻️ renew $WM\n🐻 hibernate\n🔃 reboot\n🖥️shutdown\n💤 sleep\n📺 display off" | dmenu -i -p 'Action: ')" in
+	'🔒 lock') lock ;;
+	"🚪 leave $WM") kill -TERM "$(wmpid)" ;;
+	"♻️ renew $WM") kill -HUP "$(wmpid)" ;;
+	'🐻 hibernate') slock $ctl hibernate -i ;;
+	'💤 sleep') slock $ctl suspend -i ;;
+	'🔃 reboot') $ctl reboot -i ;;
+	'🖥️shutdown') $ctl poweroff -i ;;
+	'📺 display off') xset dpms force off ;;
+	*) exit 1 ;;
+esac
