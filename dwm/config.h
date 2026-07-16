@@ -12,16 +12,19 @@ static int swallowfloating    = 0;
 static int smartgaps          = 0;
 static int showbar            = 1;
 static int topbar             = 1;
-static char *fonts[]          = { "monospace:size=10", "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true"  };
-static char normbgcolor[]           = "#222222";
-static char normbordercolor[]       = "#444444";
-static char normfgcolor[]           = "#bbbbbb";
-static char selfgcolor[]            = "#eeeeee";
-static char selbordercolor[]        = "#770000";
-static char selbgcolor[]            = "#005577";
+static char *fonts[]          = {
+	"Iosevka:size=12",
+	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true",
+};
+static char normbgcolor[]           = "#1d2021";
+static char normbordercolor[]       = "#282828";
+static char normfgcolor[]           = "#ebdbb2";
+static char selfgcolor[]            = "#1d2021";
+static char selbordercolor[]        = "#005577";
+static char selbgcolor[]            = "#98971a";
 static char *colors[][3] = {
-       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+       [SchemeNorm]  = { normfgcolor,  normbgcolor,  normbordercolor },
+       [SchemeSel]   = { selfgcolor,   selbgcolor,   selbordercolor  },
 };
 
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
