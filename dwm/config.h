@@ -22,9 +22,12 @@ static char normfgcolor[]           = "#ebdbb2";
 static char selfgcolor[]            = "#1d2021";
 static char selbordercolor[]        = "#005577";
 static char selbgcolor[]            = "#98971a";
+static char titlefgcolor[]          = "#ebdbb2";
+static char titlebgcolor[]          = "#3c3836";
 static char *colors[][3] = {
        [SchemeNorm]  = { normfgcolor,  normbgcolor,  normbordercolor },
        [SchemeSel]   = { selfgcolor,   selbgcolor,   selbordercolor  },
+       [SchemeTitle] = { titlefgcolor, titlebgcolor, titlebgcolor    },
 };
 
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
