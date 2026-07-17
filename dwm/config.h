@@ -73,12 +73,14 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 #define BRIGHTNESS(step) SHCMD("brightnessctl -q set " step "; pkill -RTMIN+20 dwmblocks")
 
 ResourcePref resources[] = {
-		{ "color0",		STRING,	&normbordercolor },
-		{ "color8",		STRING,	&selbordercolor },
-		{ "color0",		STRING,	&normbgcolor },
-		{ "color4",		STRING,	&normfgcolor },
-		{ "color0",		STRING,	&selfgcolor },
-		{ "color4",		STRING,	&selbgcolor },
+		{ "normbgcolor",	STRING,	&normbgcolor },
+		{ "normbordercolor",	STRING,	&normbordercolor },
+		{ "normfgcolor",	STRING,	&normfgcolor },
+		{ "selbgcolor",		STRING,	&selbgcolor },
+		{ "selbordercolor",	STRING,	&selbordercolor },
+		{ "selfgcolor",		STRING,	&selfgcolor },
+		{ "titlebgcolor",	STRING,	&titlebgcolor },
+		{ "titlefgcolor",	STRING,	&titlefgcolor },
 		{ "borderpx",		INTEGER, &borderpx },
 		{ "snap",		INTEGER, &snap },
 		{ "showbar",		INTEGER, &showbar },
