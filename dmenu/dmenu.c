@@ -899,13 +899,14 @@ read_Xresources(void) {
 
 		if (XrmGetResource(xdb, "dmenu.font", "*", &type, &xval) == True) /* font or font set */
 			fonts[0] = strdup(xval.addr);
-		if (XrmGetResource(xdb, "dmenu.color0", "*", &type, &xval) == True)  /* normal background color */
+		/* not *.color0..15: those are st's palette and would repaint dmenu */
+		if (XrmGetResource(xdb, "dmenu.normbgcolor", "*", &type, &xval) == True)
 			colors[SchemeNorm][ColBg] = strdup(xval.addr);
-		if (XrmGetResource(xdb, "dmenu.color4", "*", &type, &xval) == True)  /* normal foreground color */
+		if (XrmGetResource(xdb, "dmenu.normfgcolor", "*", &type, &xval) == True)
 			colors[SchemeNorm][ColFg] = strdup(xval.addr);
-		if (XrmGetResource(xdb, "dmenu.color4", "*", &type, &xval) == True)  /* selected background color */
+		if (XrmGetResource(xdb, "dmenu.selbgcolor", "*", &type, &xval) == True)
 			colors[SchemeSel][ColBg] = strdup(xval.addr);
-		if (XrmGetResource(xdb, "dmenu.color0", "*", &type, &xval) == True)  /* selected foreground color */
+		if (XrmGetResource(xdb, "dmenu.selfgcolor", "*", &type, &xval) == True)
 			colors[SchemeSel][ColFg] = strdup(xval.addr);
 
 		XrmDestroyDatabase(xdb);
