@@ -1,5 +1,5 @@
-static char *font = "mono:pixelsize=12:antialias=true:autohint=true";
-static char *font2[] = { "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true" };
+static char *font = "Iosevka Term:weight=light:size=20:antialias=true";
+static char *font2[] = { "Noto Color Emoji:pixelsize=12:antialias=true:autohint=true" };
 static int borderpx = 2;
 
 static char *shell = "/bin/sh";
@@ -39,7 +39,7 @@ char *termname = "st-256color";
 
 unsigned int tabspaces = 8;
 
-float alpha = 0.8;
+float alpha = 0.73;
 float alphaOffset = 0.0;
 float alphaUnfocus;
 
@@ -61,6 +61,9 @@ static const char *colorname[] = {
 	"#8ec07c",
 	"#ebdbb2",
 	[255] = 0,
+	"#ebdbb2",
+	"#555555",
+	"#1d2021",
 	"#ebdbb2",
 };
 
