@@ -12,6 +12,8 @@ static int swallowfloating    = 0;
 static int smartgaps          = 0;
 static int showbar            = 1;
 static int topbar             = 1;
+static const int horizpadbar  = 5;
+static const int vertpadbar   = 7;
 static char *fonts[]          = {
 	"Iosevka:size=12",
 	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true",
