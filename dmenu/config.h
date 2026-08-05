@@ -3,6 +3,7 @@ static const char *fonts[] = {
 	"Iosevka:size=12",
 	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"
 };
+static const unsigned int vertpad = 7;
 static const unsigned int bgalpha = OPAQUE;
 static const unsigned int fgalpha = OPAQUE;
 static const char *prompt      = NULL;
