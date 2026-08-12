@@ -14,6 +14,12 @@ static int showbar            = 1;
 static int topbar             = 1;
 static const int horizpadbar  = 5;
 static const int vertpadbar   = 7;
+static const unsigned int systraypinning = 0;
+static const unsigned int systrayonleft  = 1;
+static const unsigned int systrayspacing = 4;
+static const unsigned int systrayiconsize = 18;
+static const int systraypinningfailfirst = 1;
+static const int showsystray             = 1;
 static char *fonts[]          = {
 	"Iosevka:size=12",
 	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true",
