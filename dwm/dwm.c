@@ -573,6 +573,14 @@ buttonpress(XEvent *e)
 	Monitor *m;
 	XButtonPressedEvent *ev = &e->xbutton;
 
+	if ((c = wintosystrayicon(ev->window))) {
+		/* left click on a tray icon: go to the app's window. If it has none
+		 * (closed to the tray, ibus...), the app gets the click instead */
+		if ((c = trayiconclient(c)))
+			showclient(c);
+		XAllowEvents(dpy, c ? AsyncPointer : ReplayPointer, CurrentTime);
+		return;
+	}
 	click = ClkRootWin;
 	/* focus monitor if necessary */
 	if ((m = wintomon(ev->window)) && m != selmon) {
@@ -2060,6 +2068,27 @@ seturgent(Client *c, int urg)
 	XFree(wmh);
 }
 
+/* switch to c's monitor and its first tag, and focus it */
+void
+showclient(Client *c)
+{
+	unsigned int i;
+
+	if (c->mon != selmon) {
+		unfocus(selmon->sel, 0);
+		selmon = c->mon;
+	}
+	if (!ISVISIBLE(c)) {
+		for (i = 0; i < LENGTH(tags) && !(c->tags & 1 << i); i++);
+		if (i < LENGTH(tags)) {
+			const Arg a = {.ui = 1 << i};
+			view(&a);
+		}
+	}
+	focus(c);
+	restack(selmon);
+}
+
 void
 showhide(Client *c)
 {
@@ -2232,6 +2261,31 @@ toggleview(const Arg *arg)
 		focus(NULL);
 		arrange(selmon);
 	}
+}
+
+/* the window of tray icon i's app: one of its process's own, else one of its
+ * nearest child process's (Steam's windows belong to steamwebhelper, and its
+ * games are further down) */
+Client *
+trayiconclient(Client *i)
+{
+	Client *c, *best = NULL;
+	Monitor *m;
+	pid_t p;
+	int d, bestd = 8; /* how many parent processes up to look */
+
+	if (!i->pid)
+		return NULL;
+	for (m = mons; m; m = m->next)
+		for (c = m->stack; c; c = c->snext) {
+			for (p = c->pid, d = 0; p && p != i->pid && d < bestd; d++)
+				p = getparentprocess(p);
+			if (p && p == i->pid && d < bestd) {
+				best = c;
+				bestd = d;
+			}
+		}
+	return best;
 }
 
 void
