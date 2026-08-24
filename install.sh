@@ -56,6 +56,8 @@ install_configs() {
 	copy config/picom/picom.conf   "$cfg/picom/picom.conf"
 	copy config/mpd/mpd.conf       "$cfg/mpd/mpd.conf"
 	copy config/ncmpcpp/config     "$cfg/ncmpcpp/config"
+	copy config/ncmpcpp/bindings   "$cfg/ncmpcpp/bindings"
+	copy config/newsboat/config    "$cfg/newsboat/config"
 	copy config/gtk-3.0/settings.ini "$cfg/gtk-3.0/settings.ini"
 	copy config/gtk-4.0/settings.ini "$cfg/gtk-4.0/settings.ini"
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
