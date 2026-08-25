@@ -47,6 +47,27 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 | `mod+comma` / `period` | previous / next track |
 | media keys | volume, mic, playback, brightness |
 
+## system tray
+
+- left click: dwm goes to the app's tag and focuses its window, even for apps
+  that ignore left clicks themselves. If the app has no window open
+  (closed to the tray), the click goes to the app, which reopens it
+- right click: the app's own menu, dropping down under the icon
+
+When an app asks for focus (a tray click, "Show" in its tray menu, a link
+opening in the browser), dwm switches to it, unless a fullscreen window has
+focus: then the app's tag is only marked urgent, so games stay put. Set
+`focusonactivate = 0` in dwm/config.h for stock dwm (always just urgent).
+
+It's the suckless systray patch with these bugs fixed:
+- it told every icon a modal dialog was open, so GTK apps ignored all clicks
+- it said the tray was vertical, so menus opened sideways over the bar
+- it sent icons a malformed "you're docked" message
+- it could crash when another tray was running
+- it forced icons back on screen whenever an app hid its own, which could
+  make dwm and that app fight in a loop and lag the whole machine. Now an
+  icon is shown or hidden only when its app asks.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
