@@ -775,8 +775,17 @@ clientmessage(XEvent *e)
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
-		if (c != selmon->sel && !c->isurgent)
-			seturgent(c, 1);
+		if (c == selmon->sel)
+			return;
+		/* stock dwm only marks the window urgent; with focusonactivate, go
+		 * to it (tray icon clicks, "Show" in tray menus...), except while a
+		 * fullscreen window has focus, so games aren't yanked away */
+		if (!focusonactivate || (selmon->sel && selmon->sel->isfullscreen)) {
+			if (!c->isurgent)
+				seturgent(c, 1);
+			return;
+		}
+		showclient(c);
 	}
 }
 

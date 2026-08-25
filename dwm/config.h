@@ -57,7 +57,7 @@ static float mfact     = 0.55;
 static int nmaster     = 1;
 static int resizehints = 0;
 static const int lockfullscreen = 1;
-#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
+static const int focusonactivate = 1;
 #include "vanitygaps.c"
 static const Layout layouts[] = {
 	{ "[]=",	tile },
