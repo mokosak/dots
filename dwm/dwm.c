@@ -2828,16 +2828,19 @@ getparentprocess(pid_t p)
 	unsigned int v = 0;
 
 #if defined(__linux__)
+	/* "PID (comm) state PPID": comm is chosen by the process and can hold
+	 * spaces and ')' to fake a parent, so read the fields after the last ')' */
 	FILE *f;
-	char buf[256];
-	snprintf(buf, sizeof(buf) - 1, "/proc/%u/stat", (unsigned)p);
+	char buf[512], *s;
+	snprintf(buf, sizeof(buf), "/proc/%u/stat", (unsigned)p);
 
 	if (!(f = fopen(buf, "r")))
 		return (pid_t)0;
 
-	if (fscanf(f, "%*u %*s %*c %u", (unsigned *)&v) != 1)
-		v = (pid_t)0;
+	s = fgets(buf, sizeof(buf), f);
 	fclose(f);
+	if (!s || !(s = strrchr(buf, ')')) || sscanf(s + 1, " %*c %u", &v) != 1)
+		v = 0;
 #elif defined(__FreeBSD__)
 	struct kinfo_proc *proc = kinfo_getproc(p);
 	if (!proc)
