@@ -1453,7 +1453,10 @@ manage(Window w, XWindowAttributes *wa)
 		(unsigned char *) &(c->win), 1);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	setclientstate(c, NormalState);
-	if(selmon->sel && selmon->sel->isfullscreen && !c->isfloating)
+	/* only leave fullscreen if the new window would open hidden behind it,
+	 * not when it lands on another tag or monitor */
+	if (selmon->sel && selmon->sel->isfullscreen && !c->isfloating
+	&& c->mon == selmon && ISVISIBLE(c))
 		setfullscreen(selmon->sel, 0);
 	if (c->mon == selmon)
 		unfocus(selmon->sel, 0);
