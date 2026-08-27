@@ -845,7 +845,11 @@ configurerequest(XEvent *e)
 	XWindowChanges wc;
 
 	if ((c = wintoclient(ev->window))) {
-		if (ev->value_mask & CWBorderWidth)
+		if (c->isfullscreen)
+			/* fullscreen clients stay pinned to their monitor; games
+			 * asking for their windowed size would otherwise shrink */
+			configure(c);
+		else if (ev->value_mask & CWBorderWidth)
 			c->bw = ev->border_width;
 		else if (c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
 			m = c->mon;
@@ -1707,6 +1711,11 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
 	wc.border_width = c->bw;
+	/* a client on a tag that isn't being viewed (e.g. a fullscreen game)
+	 * takes the new size but stays parked off-screen; showhide() brings
+	 * it back when its tag is viewed again */
+	if (!ISVISIBLE(c))
+		wc.x = WIDTH(c) * -2;
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
