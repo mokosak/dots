@@ -47,6 +47,20 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 | `mod+comma` / `period` | previous / next track |
 | media keys | volume, mic, playback, brightness |
 
+## games
+
+A fullscreen game can sit on one tag while you work on another:
+
+- Games stay parked off-screen while their tag isn't shown, even if they
+  re-request fullscreen or resize themselves.
+- A fullscreen window ignores its own resize requests, so games can't shrink
+  themselves out of fullscreen.
+- picom unredirects fullscreen windows: no compositor latency in-game.
+- `mod+shift+f` forces fullscreen for games that only offer borderless.
+- If a new window opens on the game's *own* tag, the game leaves fullscreen
+  so that window isn't hidden behind it. Keep Steam/Discord on another tag.
+- Steam and its games (`steam_app_*`) never swallow a terminal.
+
 ## system tray
 
 - left click: dwm goes to the app's tag and focuses its window, even for apps
