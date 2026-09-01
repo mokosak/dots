@@ -725,6 +725,12 @@ setsel(char *str, Time t)
 	XSetSelectionOwner(xw.dpy, XA_PRIMARY, xw.win, t);
 	if (XGetSelectionOwner(xw.dpy, XA_PRIMARY) != xw.win)
 		selclear();
+
+	/* highlighting also copies, so ctrl+v works in other programs; but a
+	 * blank selection (a click into the window that moved a little, over
+	 * empty space) mustn't replace what's on the clipboard with a newline */
+	if (str[strspn(str, " \t\r\n")])
+		clipcopy(NULL);
 }
 
 void
