@@ -6,7 +6,7 @@ urls="$(sed 's/.*│//g' | tr -d '\n' | # First remove linebreaks and mutt sideb
 	grep -aEo "$urlregex" | # grep only urls as defined above.
 	uniq | # Ignore neighboring duplicates.
 	sed "s/\(\.\|,\|;\|\!\\|\?\)$//;
-	s/^www./http:\/\/www\./")" # xdg-open will not detect url without http
+	s/^www./http:\/\/www\./")"
 
 [ -z "$urls" ] && exit 1
 
