@@ -82,6 +82,22 @@ It's the suckless systray patch with these bugs fixed:
   make dwm and that app fight in a loop and lag the whole machine. Now an
   icon is shown or hidden only when its app asks.
 
+## st
+
+| key | does |
+|-----|------|
+| mouse wheel | scroll history, 3 lines (in less/man/vim it scrolls the program) |
+| `shift+pageup/down`, `alt+k/j`, `alt+u/d` | scroll history |
+| highlight with the mouse | copies: `ctrl+v` in any program, or middle-click |
+| `ctrl+shift+c` / `alt+c` | copy |
+| `ctrl+shift+v` / `alt+v` / `shift+insert` | paste |
+| `alt+l` / `alt+y` | open / copy a URL on screen (dmenu) |
+| `alt+o` | copy a command's output (dmenu) |
+| `ctrl+shift+k/j` (or `pageup/down`) | bigger / smaller font, `ctrl+shift+home` resets |
+| `alt+s` / `alt+a` | more / less transparent |
+
+Typing while scrolled up jumps back to the prompt.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
