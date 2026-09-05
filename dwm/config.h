@@ -4,8 +4,8 @@
 
 static unsigned int borderpx  = 3;
 static unsigned int snap      = 32;
-static unsigned int gappih    = 10;
-static unsigned int gappiv    = 10;
+static unsigned int gappih    = 12;
+static unsigned int gappiv    = 12;
 static unsigned int gappoh    = 6;
 static unsigned int gappov    = 6;
 static int swallowfloating    = 0;
