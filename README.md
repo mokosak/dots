@@ -47,6 +47,11 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 | `mod+comma` / `period` | previous / next track |
 | media keys | volume, mic, playback, brightness |
 
+Notifications are clickable: left click runs the notification's action (a
+message opens its chat and dwm jumps there; with several actions, a dmenu
+lets you pick), middle click opens that menu (actions and links), right click
+dismisses. `(A)` marks ones with actions.
+
 ## games
 
 A fullscreen game can sit on one tag while you work on another:
