@@ -3,7 +3,7 @@
     follow = keyboard
     width = 370
     height = (0,350)
-    offset = (6,34)
+    offset = (6,40)
     padding = 6
     horizontal_padding = 8
     frame_width = 3
