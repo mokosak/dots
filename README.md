@@ -1,6 +1,6 @@
 ## install
 
-Arch, official repos only:
+Debian or Arch, official repos only:
 
 ```sh
 ./install.sh
@@ -9,6 +9,11 @@ Arch, official repos only:
 Installs the packages, keeps the sources in `~/.local/src/dots` and builds dwm, dmenu, st and dwmblocks into `~/.local`,
 then installs the scripts to `~/.local/bin` and the configs to `~/.config`.
 Anything it replaces is backed up once as `<file>.bak-larbs`.
+
+- Debian has no Iosevka package; if the font isn't installed yet, the
+  official release is downloaded into `~/.local/share/fonts`.
+- Debian's mpd package starts a system-wide mpd; the installer turns that off
+  because yours runs per user.
 
 ## keybinds (mod = super)
 

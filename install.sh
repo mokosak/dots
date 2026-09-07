@@ -6,6 +6,20 @@ cd "$(dirname "$0")"
 
 if command -v doas >/dev/null 2>&1; then root=doas; else root=sudo; fi
 
+DEBIAN_PKGS="
+build-essential pkg-config libx11-dev libxft-dev libxinerama-dev libx11-xcb-dev
+libxcb-res0-dev libharfbuzz-dev libfreetype-dev libfontconfig-dev
+x11-xserver-utils xinit fonts-noto-color-emoji fonts-font-awesome bluez
+picom dunst libnotify-bin
+pipewire-pulse wireplumber pulsemixer
+mpd mpc ncmpcpp newsboat
+maim xclip xdotool xwallpaper brightnessctl
+lm-sensors htop psmisc suckless-tools network-manager xdg-utils file firefox-esr
+thunar gvfs xdg-desktop-portal-gtk gnome-keyring libpam-gnome-keyring lxpolkit
+xss-lock zathura zathura-pdf-poppler nsxiv qt5ct
+curl unzip
+"
+
 ARCH_PKGS="
 xorg-server xorg-xinit xorg-xrdb xorg-xsetroot xorg-xset
 base-devel libx11 libxft libxinerama libxcb harfbuzz fontconfig freetype2
@@ -20,7 +34,16 @@ xss-lock zathura zathura-pdf-poppler nsxiv qt5ct
 "
 
 install_deps() {
-	$root pacman -S --needed --noconfirm $ARCH_PKGS
+	if command -v apt-get >/dev/null 2>&1; then
+		$root apt-get update
+		$root apt-get install -y $DEBIAN_PKGS
+		$root systemctl disable --now mpd.service mpd.socket >/dev/null 2>&1 || :
+	elif command -v pacman >/dev/null 2>&1; then
+		$root pacman -S --needed --noconfirm $ARCH_PKGS
+	else
+		echo "no apt or pacman: install the packages listed in install.sh yourself" >&2
+		exit 1
+	fi
 }
 
 build_suckless() {
