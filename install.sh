@@ -46,6 +46,19 @@ install_deps() {
 	fi
 }
 
+install_iosevka() {
+	fc-list "Iosevka Term" family | grep -q . && return 0
+	tmp=$(mktemp -d)
+	url=$(curl -fsSL https://api.github.com/repos/be5invis/Iosevka/releases/latest |
+		grep -o '"browser_download_url": *"[^"]*/PkgTTC-Iosevka-[0-9.]*\.zip"' | cut -d'"' -f4)
+	curl -fL --proto '=https' --tlsv1.2 -o "$tmp/iosevka.zip" "$url"
+	mkdir -p "$HOME/.local/share/fonts/iosevka"
+	unzip -o -j "$tmp/iosevka.zip" 'Iosevka-Regular.ttc' 'Iosevka-Light.ttc' 'Iosevka-Bold.ttc' \
+		-d "$HOME/.local/share/fonts/iosevka" >/dev/null
+	rm -rf "$tmp"
+	fc-cache -f "$HOME/.local/share/fonts"
+}
+
 build_suckless() {
 	src="$HOME/.local/src/dots"
 	if [ "$(pwd -P)" != "$(cd "$src" 2>/dev/null && pwd -P)" ]; then
@@ -88,6 +101,7 @@ install_configs() {
 
 session_note="log in on tty1 and run startx."
 install_deps
+install_iosevka
 build_suckless
 install_scripts
 install_configs
