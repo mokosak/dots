@@ -17,4 +17,7 @@ for program in picom dunst dwmblocks; do
 	pidof -sx "$program" || "$program" &
 done >/dev/null 2>&1
 
+pidof -sx xkblayout >/dev/null ||
+	xkblayout -w | while read -r _; do pkill -RTMIN+30 dwmblocks; done &
+
 exec dwm

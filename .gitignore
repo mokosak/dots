@@ -6,4 +6,5 @@ st/st
 dwmblocks/dwmblocks
 __pycache__/
 *.pyc
+dwmblocks/xkblayout
 wallpaper/
