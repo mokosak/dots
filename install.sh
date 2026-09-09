@@ -94,6 +94,7 @@ install_configs() {
 	copy config/ncmpcpp/config     "$cfg/ncmpcpp/config"
 	copy config/ncmpcpp/bindings   "$cfg/ncmpcpp/bindings"
 	copy config/newsboat/config    "$cfg/newsboat/config"
+	copy config/fontconfig/60-iosevka-color-emoji.conf "$cfg/fontconfig/conf.d/60-iosevka-color-emoji.conf"
 	copy config/gtk-3.0/settings.ini "$cfg/gtk-3.0/settings.ini"
 	copy config/gtk-4.0/settings.ini "$cfg/gtk-4.0/settings.ini"
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
