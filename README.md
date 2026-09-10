@@ -108,6 +108,13 @@ It's the suckless systray patch with these bugs fixed:
 
 Typing while scrolled up jumps back to the prompt.
 
+## status bar
+
+dwmblocks: music, unread RSS, memory, CPU temp,
+network traffic (click: nmtui, for Wi-Fi and connections), volume,
+brightness, battery, keyboard layout, clock, bluetooth. Blocks with nothing
+to show (no battery on a desktop, etc.) stay hidden.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
