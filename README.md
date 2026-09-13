@@ -115,6 +115,11 @@ network traffic (click: nmtui, for Wi-Fi and connections), volume,
 brightness, battery, keyboard layout, clock, bluetooth. Blocks with nothing
 to show (no battery on a desktop, etc.) stay hidden.
 
+The keyboard block shows the active layout and a click switches to the next
+one. It changes the moment the layout does: `xkblayout -w` (a tiny helper
+built with dwmblocks) runs from `~/.xinitrc` and pokes the block on every
+switch. For more than one layout, add `setxkbmap -layout ...` to `~/.xinitrc`.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
