@@ -115,6 +115,11 @@ network traffic (click: nmtui, for Wi-Fi and connections), volume,
 brightness, battery, keyboard layout, clock, bluetooth. Blocks with nothing
 to show (no battery on a desktop, etc.) stay hidden.
 
+Click the Bluetooth block for bluetuith, a Bluetooth TUI (pair, connect,
+audio profiles, file transfer; its keys are listed along the bottom), in
+gruvbox. Middle click turns Bluetooth on or off. It isn't packaged for
+Debian, so the installer fetches the pinned release and checks its SHA-256.
+
 The keyboard block shows the active layout and a click switches to the next
 one. It changes the moment the layout does: `xkblayout -w` (a tiny helper
 built with dwmblocks) runs from `~/.xinitrc` and pokes the block on every

@@ -101,11 +101,28 @@ install_configs() {
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
 }
 
+BLUETUITH_VERSION=0.2.7
+BLUETUITH_SHA256=145888f0e3959d29832c7395403c2327e0f03b9591e4cdd3f712741cf0f934e9
+install_bluetuith() {
+	[ -x "$HOME/.local/bin/bluetuith" ] && return 0
+	[ "$(uname -m)" = x86_64 ] || return 0
+	tmp=$(mktemp -d)
+	curl -fL --proto '=https' --tlsv1.2 -o "$tmp/bluetuith.tar.gz" \
+		"https://github.com/bluetuith-org/bluetuith/releases/download/v$BLUETUITH_VERSION/bluetuith_${BLUETUITH_VERSION}_Linux_x86_64.tar.gz"
+	echo "$BLUETUITH_SHA256  $tmp/bluetuith.tar.gz" | sha256sum -c - >/dev/null || {
+		echo "bluetuith download doesn't match the reviewed version, skipping" >&2
+		rm -rf "$tmp"; return 0; }
+	tar xzf "$tmp/bluetuith.tar.gz" -C "$tmp" bluetuith
+	install -Dm755 "$tmp/bluetuith" "$HOME/.local/bin/bluetuith"
+	rm -rf "$tmp"
+}
+
 session_note="log in on tty1 and run startx."
 install_deps
 install_iosevka
 build_suckless
 install_scripts
 install_configs
+install_bluetuith
 
 echo "done. $session_note"
