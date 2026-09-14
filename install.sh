@@ -97,6 +97,7 @@ install_configs() {
 	copy config/fontconfig/60-iosevka-color-emoji.conf "$cfg/fontconfig/conf.d/60-iosevka-color-emoji.conf"
 	copy config/gtk-3.0/settings.ini "$cfg/gtk-3.0/settings.ini"
 	copy config/gtk-4.0/settings.ini "$cfg/gtk-4.0/settings.ini"
+	copy config/bluetuith/bluetuith.conf "$cfg/bluetuith/bluetuith.conf"
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
 }
 

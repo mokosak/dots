@@ -10,7 +10,7 @@ static const Block blocks[] = {
 	{"",	"sb-battery",	5,	3},
 	{"",	"sb-kbselect",	0,	30},
 	{"",	"sb-clock",	60,	1},
-	{"",	"sb-help-icon",	0,	15},
+	{"",	"sb-bluetooth",	10,	5},
 };
 
 static char *delim = " ";
