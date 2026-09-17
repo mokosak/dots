@@ -13,7 +13,7 @@ dbus-update-activation-environment --systemd DISPLAY XAUTHORITY \
 xrdb -merge "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources"
 setbg &
 
-for program in picom dunst dwmblocks; do
+for program in picom dunst dwmblocks lxpolkit; do
 	pidof -sx "$program" || "$program" &
 done >/dev/null 2>&1
 
