@@ -1,5 +1,5 @@
 static const Block blocks[] = {
-	{"",	"sb-tasks",	10,	26},
+	{"",	"sb-privacy",	2,	9},
 	{"",	"sb-music",	0,	11},
 	{"",	"sb-news",	0,	6},
 	{"",	"sb-memory",	10,	14},
