@@ -125,6 +125,15 @@ one. It changes the moment the layout does: `xkblayout -w` (a tiny helper
 built with dwmblocks) runs from `~/.xinitrc` and pokes the block on every
 switch. For more than one layout, add `setxkbmap -layout ...` to `~/.xinitrc`.
 
+## lock screen and viewers
+
+`xss-lock` (started from `~/.xinitrc`) runs `slock` before every suspend or
+hibernate, lid included, and after 10 minutes idle; `xset s 1800` in
+`~/.xinitrc` makes that 30. Videos, calls and games pause the idle timer:
+`screensaver-inhibit` provides the "keep the screen on" service GNOME used
+to, and while an app uses it the bar shows ☕ (right click: which app). An
+app that quits or crashes lets go automatically.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
