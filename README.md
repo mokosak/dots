@@ -134,6 +134,10 @@ hibernate, lid included, and after 10 minutes idle; `xset s 1800` in
 to, and while an app uses it the bar shows ☕ (right click: which app). An
 app that quits or crashes lets go automatically.
 
+PDFs open in zathura, dark by default (`i` shows the original colors, `d`/`u`
+half pages, `J`/`K` zoom), and images in nsxiv. Both are gruvbox, and the
+installer makes them the defaults for files you open from Firefox or Thunar.
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.

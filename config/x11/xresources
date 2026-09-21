@@ -12,6 +12,13 @@ dmenu.normfgcolor:   #ebdbb2
 dmenu.selbgcolor:    #83a598
 dmenu.selfgcolor:    #1d2021
 
+Nsxiv.window.background: #1d2021
+Nsxiv.window.foreground: #ebdbb2
+Nsxiv.bar.background:    #282828
+Nsxiv.bar.foreground:    #ebdbb2
+Nsxiv.bar.font:          Iosevka-11
+Nsxiv.mark.foreground:   #fabd2f
+
 st.font:  Iosevka Term:weight=light:size=20:antialias=true
 st.alpha: 0.73
 

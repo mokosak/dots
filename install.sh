@@ -98,6 +98,7 @@ install_configs() {
 	copy config/gtk-3.0/settings.ini "$cfg/gtk-3.0/settings.ini"
 	copy config/gtk-4.0/settings.ini "$cfg/gtk-4.0/settings.ini"
 	copy config/xdg-desktop-portal/dwm-portals.conf "$cfg/xdg-desktop-portal/dwm-portals.conf"
+	copy config/zathura/zathurarc  "$cfg/zathura/zathurarc"
 	copy config/bluetuith/bluetuith.conf "$cfg/bluetuith/bluetuith.conf"
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
 }
@@ -118,6 +119,15 @@ install_bluetuith() {
 	rm -rf "$tmp"
 }
 
+set_default_apps() {
+	apps=/usr/share/applications
+	[ -e "$apps/org.pwmt.zathura-pdf-poppler.desktop" ] &&
+		xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
+	[ -e "$apps/nsxiv.desktop" ] &&
+		xdg-mime default nsxiv.desktop image/png image/jpeg image/gif image/webp image/bmp image/tiff
+	return 0
+}
+
 session_note="log in on tty1 and run startx."
 install_deps
 install_iosevka
@@ -125,5 +135,6 @@ build_suckless
 install_scripts
 install_configs
 install_bluetuith
+set_default_apps
 
 echo "done. $session_note"
