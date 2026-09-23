@@ -6,6 +6,7 @@ export BROWSER="firefox"
 export EDITOR="${EDITOR:-vim}"
 export XDG_CURRENT_DESKTOP=dwm DESKTOP_SESSION=dwm
 export XDG_SESSION_TYPE=x11
+export QT_QPA_PLATFORMTHEME=qt5ct
 
 dbus-update-activation-environment --systemd DISPLAY XAUTHORITY \
 	XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1
