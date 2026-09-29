@@ -115,6 +115,10 @@ network traffic (click: nmtui, for Wi-Fi and connections), volume,
 brightness, battery, keyboard layout, clock, bluetooth. Blocks with nothing
 to show (no battery on a desktop, etc.) stay hidden.
 
+mpd (music) starts on demand, when ncmpcpp (`mod+m`) or a music key connects
+to it, and only listens on this machine; until then the music block stays
+empty.
+
 Click the Bluetooth block for bluetuith, a Bluetooth TUI (pair, connect,
 audio profiles, file transfer; its keys are listed along the bottom), in
 gruvbox. Middle click turns Bluetooth on or off. It isn't packaged for

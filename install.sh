@@ -100,6 +100,8 @@ install_configs() {
 	copy config/xdg-desktop-portal/dwm-portals.conf "$cfg/xdg-desktop-portal/dwm-portals.conf"
 	copy config/zathura/zathurarc  "$cfg/zathura/zathurarc"
 	copy config/bluetuith/bluetuith.conf "$cfg/bluetuith/bluetuith.conf"
+	copy config/systemd/user/mpd.socket.d/localhost.conf "$cfg/systemd/user/mpd.socket.d/localhost.conf"
+	systemctl --user daemon-reload 2>/dev/null && systemctl --user enable mpd.socket 2>/dev/null || :
 	copy config/qt5ct/colors/gruvbox.conf "$cfg/qt5ct/colors/gruvbox.conf"
 	sed "s|@HOME@|$HOME|" config/qt5ct/qt5ct.conf > "${TMPDIR:-/tmp}/qt5ct.conf"
 	copy "${TMPDIR:-/tmp}/qt5ct.conf" "$cfg/qt5ct/qt5ct.conf"
