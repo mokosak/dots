@@ -98,6 +98,7 @@ install_configs() {
 	copy config/gtk-3.0/settings.ini "$cfg/gtk-3.0/settings.ini"
 	copy config/gtk-4.0/settings.ini "$cfg/gtk-4.0/settings.ini"
 	copy config/xdg-desktop-portal/dwm-portals.conf "$cfg/xdg-desktop-portal/dwm-portals.conf"
+	command -v firefox-esr >/dev/null 2>&1 && copy config/dmenu/hidden "$cfg/dmenu/hidden"
 	copy config/zathura/zathurarc  "$cfg/zathura/zathurarc"
 	copy config/bluetuith/bluetuith.conf "$cfg/bluetuith/bluetuith.conf"
 	copy config/systemd/user/mpd.socket.d/localhost.conf "$cfg/systemd/user/mpd.socket.d/localhost.conf"
