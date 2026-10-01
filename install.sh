@@ -109,6 +109,23 @@ install_configs() {
 	mkdir -p "$cfg/mpd/playlists" "$HOME/Music" "$HOME/Pictures/Screenshots"
 }
 
+GTK_THEME_COMMIT=04221c1317bed7a765a09f5bb00a97765ce4a711
+GTK_THEME_SHA256=96c4d2b52572754f1104c7418bd9da4e815579f5ce765dbaa8e9a166382d4859
+install_gtk_theme() {
+	dest="${XDG_DATA_HOME:-$HOME/.local/share}/themes/gruvbox-dark"
+	[ -f "$dest/index.theme" ] && return 0
+	tmp=$(mktemp -d)
+	curl -fL --proto '=https' --tlsv1.2 -o "$tmp/theme.tar.gz" \
+		"https://codeload.github.com/jmattheis/gruvbox-dark-gtk/tar.gz/$GTK_THEME_COMMIT"
+	echo "$GTK_THEME_SHA256  $tmp/theme.tar.gz" | sha256sum -c - >/dev/null || {
+		echo "gtk theme download doesn't match the reviewed version, skipping" >&2
+		rm -rf "$tmp"; return 0; }
+	mkdir -p "$tmp/x" "$dest"
+	tar xzf "$tmp/theme.tar.gz" -C "$tmp/x" --strip-components=1
+	cp -R "$tmp/x/index.theme" "$tmp/x/LICENSE" "$tmp/x/gtk-3.0" "$tmp/x/gtk-3.20" "$dest/"
+	rm -rf "$tmp"
+}
+
 BLUETUITH_VERSION=0.2.7
 BLUETUITH_SHA256=145888f0e3959d29832c7395403c2327e0f03b9591e4cdd3f712741cf0f934e9
 install_bluetuith() {
@@ -140,6 +157,7 @@ install_iosevka
 build_suckless
 install_scripts
 install_configs
+install_gtk_theme
 install_bluetuith
 set_default_apps
 

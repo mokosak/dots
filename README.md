@@ -142,6 +142,8 @@ PDFs open in zathura, dark by default (`i` shows the original colors, `d`/`u`
 half pages, `J`/`K` zoom), and images in nsxiv. Both are gruvbox, and the
 installer makes them the defaults for files you open from Firefox or Thunar.
 
+GTK apps use [jmattheis/gruvbox-dark-gtk](https://github.com/jmattheis/gruvbox-dark-gtk)
+
 ## uninstall
 
 there's no uninstaller, because i don't plan on uninstalling.
