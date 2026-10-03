@@ -151,6 +151,17 @@ set_default_apps() {
 	return 0
 }
 
+install_session() {
+	systemctl is-enabled display-manager.service >/dev/null 2>&1 || return 0
+	tmp=$(mktemp -d)
+	printf '#!/bin/sh\nexec "$HOME/.xinitrc"\n' > "$tmp/dwm-session"
+	printf '[Desktop Entry]\nName=dwm\nComment=Dynamic window manager\nExec=/usr/local/bin/dwm-session\nType=Application\nDesktopNames=dwm\n' > "$tmp/dwm.desktop"
+	$root install -Dm755 "$tmp/dwm-session" /usr/local/bin/dwm-session
+	$root install -Dm644 "$tmp/dwm.desktop" /usr/share/xsessions/dwm.desktop
+	rm -rf "$tmp"
+	session_note='log out, pick "dwm" on the login screen (the gear icon on GDM) and log in.'
+}
+
 session_note="log in on tty1 and run startx."
 install_deps
 install_iosevka
@@ -160,5 +171,6 @@ install_configs
 install_gtk_theme
 install_bluetuith
 set_default_apps
+install_session
 
 echo "done. $session_note"

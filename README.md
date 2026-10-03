@@ -10,6 +10,9 @@ Installs the packages, keeps the sources in `~/.local/src/dots` and builds dwm, 
 then installs the scripts to `~/.local/bin` and the configs to `~/.config`.
 Anything it replaces is backed up once as `<file>.bak-larbs`.
 
+- With a login screen (GDM, LightDM...), dwm is added as a session: log out,
+  pick "dwm" (the gear icon on GDM) and log in. GNOME or whatever else you
+  had stays as it was.
 - Debian has no Iosevka package; if the font isn't installed yet, the
   official release is downloaded into `~/.local/share/fonts`.
 - Debian's mpd package starts a system-wide mpd; the installer turns that off
