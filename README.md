@@ -13,6 +13,7 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 - With a login screen (GDM, LightDM...), dwm is added as a session: log out,
   pick "dwm" (the gear icon on GDM) and log in. GNOME or whatever else you
   had stays as it was.
+- Without one, `startx` on tty1 runs it through `~/.xinitrc`.
 - Debian has no Iosevka package; if the font isn't installed yet, the
   official release is downloaded into `~/.local/share/fonts`.
 - Debian's mpd package starts a system-wide mpd; the installer turns that off

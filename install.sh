@@ -162,6 +162,16 @@ install_session() {
 	session_note='log out, pick "dwm" on the login screen (the gear icon on GDM) and log in.'
 }
 
+install_startx() {
+	systemctl is-enabled display-manager.service >/dev/null 2>&1 && return 0
+	profile="$HOME/.profile"
+	[ -f "$HOME/.bash_profile" ] && profile="$HOME/.bash_profile"
+	grep -q "exec startx" "$profile" 2>/dev/null && return 0
+	[ -e "$profile" ] && [ ! -e "$profile.bak-larbs" ] && cp -a "$profile" "$profile.bak-larbs"
+	printf '\n# start dwm when logging in on tty1\nif [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then\n\texec startx\nfi\n' >> "$profile"
+	session_note="log in on tty1 and dwm starts."
+}
+
 session_note="log in on tty1 and run startx."
 install_deps
 install_iosevka
@@ -172,5 +182,6 @@ install_gtk_theme
 install_bluetuith
 set_default_apps
 install_session
+install_startx
 
 echo "done. $session_note"
