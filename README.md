@@ -10,6 +10,10 @@ Installs the packages, keeps the sources in `~/.local/src/dots` and builds dwm, 
 then installs the scripts to `~/.local/bin` and the configs to `~/.config`.
 Anything it replaces is backed up once as `<file>.bak-larbs`.
 
+- Debian starts ibus (an input-method service) at login, and ibus keeps
+  forcing the keyboard back to a single layout, so the installer turns it
+  off for your user (`im-config -n none`, written to `~/.xinputrc`). If you
+  had already picked an input method there, it's left alone.
 - With a login screen (GDM, LightDM...), dwm is added as a session: log out,
   pick "dwm" (the gear icon on GDM) and log in. GNOME or whatever else you
   had stays as it was.

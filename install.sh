@@ -151,6 +151,11 @@ set_default_apps() {
 	return 0
 }
 
+disable_ibus() {
+	command -v im-config >/dev/null 2>&1 || return 0
+	[ -e "$HOME/.xinputrc" ] || im-config -n none
+}
+
 install_session() {
 	systemctl is-enabled display-manager.service >/dev/null 2>&1 || return 0
 	tmp=$(mktemp -d)
@@ -180,6 +185,7 @@ install_scripts
 install_configs
 install_gtk_theme
 install_bluetuith
+disable_ibus
 set_default_apps
 install_session
 install_startx
