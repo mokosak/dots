@@ -150,6 +150,19 @@ PDFs open in zathura, dark by default (`i` shows the original colors, `d`/`u`
 half pages, `J`/`K` zoom), and images in nsxiv. Both are gruvbox, and the
 installer makes them the defaults for files you open from Firefox or Thunar.
 
+## theme
+
+Everything is in `~/.config/x11/xresources`: the bar (`dwm.*`), dmenu
+(`dmenu.*`) and st (`*.color0..15`). The bar has its own keys, so a new
+terminal palette can't repaint it. After editing, run
+`xrdb -merge ~/.config/x11/xresources` and use system menu > renew dwm.
+On a HiDPI screen, uncomment `Xft.dpi` there.
+
+Gruvbox dark throughout: the bar is `#1d2021` with the active tag in green
+`#98971a`, the focused window gets a `#005577` frame and unfocused ones blend
+into the wallpaper, dmenu highlights in `#83a598`, and st is 73% opaque over
+the wallpaper.
+
 GTK apps use [jmattheis/gruvbox-dark-gtk](https://github.com/jmattheis/gruvbox-dark-gtk)
 
 ## uninstall
