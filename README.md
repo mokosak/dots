@@ -163,6 +163,12 @@ Gruvbox dark throughout: the bar is `#1d2021` with the active tag in green
 into the wallpaper, dmenu highlights in `#83a598`, and st is 73% opaque over
 the wallpaper.
 
+Fonts come from `ttc-iosevka`: Iosevka Term Light in st (Iosevka's cut made
+for terminals, so arrows and symbols stay one cell wide) and Iosevka
+everywhere else. Iosevka ships its own monochrome clock faces and a few other
+symbols, so `~/.config/fontconfig/conf.d/60-iosevka-color-emoji.conf` hides
+those from it and the bar's icons all stay color emoji.
+
 GTK apps use [jmattheis/gruvbox-dark-gtk](https://github.com/jmattheis/gruvbox-dark-gtk)
 
 ## uninstall
