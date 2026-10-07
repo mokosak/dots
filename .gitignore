@@ -4,7 +4,5 @@ dmenu/dmenu
 dmenu/stest
 st/st
 dwmblocks/dwmblocks
-__pycache__/
-*.pyc
 dwmblocks/xkblayout
 wallpaper/
