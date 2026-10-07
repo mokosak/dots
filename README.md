@@ -60,10 +60,17 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 | `mod+comma` / `period` | previous / next track |
 | media keys | volume, mic, playback, brightness |
 
+Mouse: `mod+drag` moves, `mod+right-drag` resizes, `mod+middle-click` floats.
+Status blocks are clickable: the clock shows the month, music opens ncmpcpp,
+volume opens pulsemixer, scrolling changes volume or brightness, and so on.
+Shift+click opens a block's script in `$EDITOR`.
+
 Notifications are clickable: left click runs the notification's action (a
 message opens its chat and dwm jumps there; with several actions, a dmenu
 lets you pick), middle click opens that menu (actions and links), right click
 dismisses. `(A)` marks ones with actions.
+
+Screenshots go to `~/Pictures/Screenshots` (`$SCREENSHOT_DIR` overrides).
 
 ## games
 
