@@ -23,6 +23,9 @@ Anything it replaces is backed up once as `<file>.bak-larbs`.
 - Debian's mpd package starts a system-wide mpd; the installer turns that off
   because yours runs per user.
 
+To change dwm/st/dmenu later: edit `config.h` in `~/.local/src/dots/<name>`,
+then `make PREFIX=~/.local install` there (and system menu > renew dwm).
+
 ## keybinds (mod = super)
 
 | key | does |
