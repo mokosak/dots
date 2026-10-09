@@ -1,27 +1,23 @@
-/* See LICENSE file for copyright and license details. */
-/* Default settings; can be overriden by command line. */
-
-static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */
-/* -fn option overrides fonts[0]; default X11 font or font set */
+static int topbar = 1;
 static const char *fonts[] = {
-	"Spleen:pixelsize=24",
-	"SpaceMono Nerd Font:size=11",
-	"Noto Sans CJK JP:size=11",
-	"monospace:size=11"
+	"Iosevka:size=12",
+	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"
 };
-static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+static const unsigned int vertpad = 7;
+static const unsigned int bgalpha = OPAQUE;
+static const unsigned int fgalpha = OPAQUE;
+static const char *prompt      = NULL;
 static const char *colors[SchemeLast][2] = {
-	/*     fg         bg       */
-	[SchemeNorm] = { "#cbccc6", "#1f2430" },
-	[SchemeSel]  = { "#87d96c", "#252b38" },
-	[SchemeOut]  = { "#f28779", "#1f2430" },
+	[SchemeNorm] = { "#ebdbb2", "#1d2021" },
+	[SchemeSel] = { "#1d2021", "#83a598" },
+	[SchemeOut] = { "#000000", "#00ffff" },
 };
-/* -l option; if nonzero, dmenu uses vertical list with given number of lines */
-static unsigned int lines      = 0;
-static unsigned int border_width = 2;
+static const unsigned int alphas[SchemeLast][2] = {
+	[SchemeNorm] = { fgalpha, bgalpha },
+	[SchemeSel] = { fgalpha, bgalpha },
+	[SchemeOut] = { fgalpha, bgalpha },
+};
 
-/*
- * Characters not considered part of a word while deleting words
- * for example: " /?\"&[]"
- */
+static unsigned int lines      = 0;
+
 static const char worddelimiters[] = " ";

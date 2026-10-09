@@ -1,0 +1,26 @@
+#!/bin/sh
+
+export PATH="$HOME/.local/bin:$PATH"
+export TERMINAL="st"
+export BROWSER="firefox"
+export EDITOR="${EDITOR:-vim}"
+export XDG_CURRENT_DESKTOP=dwm DESKTOP_SESSION=dwm
+export XDG_SESSION_TYPE=x11
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+dbus-update-activation-environment --systemd DISPLAY XAUTHORITY \
+	XDG_CURRENT_DESKTOP DESKTOP_SESSION XDG_SESSION_TYPE >/dev/null 2>&1
+
+xrdb -merge "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources"
+setbg &
+
+for program in picom dunst dwmblocks lxpolkit screensaver-inhibit; do
+	pidof -sx "$program" || "$program" &
+done >/dev/null 2>&1
+
+pidof -sx xss-lock >/dev/null || xss-lock -- slock &
+
+pidof -sx xkblayout >/dev/null ||
+	xkblayout -w | while read -r _; do pkill -RTMIN+30 dwmblocks; done &
+
+exec dwm

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+inhibitors="${XDG_RUNTIME_DIR:-/tmp}/screensaver-inhibitors"
+
+mic() { grep -qs RUNNING /proc/asound/card*/pcm*c/sub*/status; }
+cam() {
+	for dev in /dev/video*; do
+		[ -e "$dev" ] && fuser -s "$dev" 2>/dev/null && return 0
+	done
+	return 1
+}
+
+case $BLOCK_BUTTON in
+	1) setsid -f "$TERMINAL" -e pulsemixer ;;
+	3) notify-send "☕ Keeping the screen awake" "$(cat "$inhibitors" 2>/dev/null)" ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+out=
+mic && out="🎙"
+cam && out="$out📷"
+[ -s "$inhibitors" ] && out="$out☕"
+[ -n "$out" ] && printf '%s\n' "$out"
+exit 0

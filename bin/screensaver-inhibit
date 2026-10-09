@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+
+import ctypes
+import itertools
+import os
+import subprocess
+import sys
+
+from gi.repository import Gio, GLib
+
+NAME = "org.freedesktop.ScreenSaver"
+XML = """<node><interface name="org.freedesktop.ScreenSaver">
+  <method name="Inhibit">
+    <arg type="s" name="application_name" direction="in"/>
+    <arg type="s" name="reason_for_inhibit" direction="in"/>
+    <arg type="u" name="cookie" direction="out"/>
+  </method>
+  <method name="UnInhibit"><arg type="u" name="cookie" direction="in"/></method>
+  <method name="SimulateUserActivity"/>
+  <method name="GetActive"><arg type="b" direction="out"/></method>
+  <method name="SetActive"><arg type="b" direction="in"/><arg type="b" direction="out"/></method>
+  <method name="GetActiveTime"><arg type="u" direction="out"/></method>
+  <method name="GetSessionIdleTime"><arg type="u" direction="out"/></method>
+  <method name="Lock"/>
+  <signal name="ActiveChanged"><arg type="b"/></signal>
+</interface></node>"""
+
+x11 = ctypes.CDLL("libX11.so.6")
+xss = ctypes.CDLL("libXss.so.1")
+x11.XOpenDisplay.restype = ctypes.c_void_p
+dpy = ctypes.c_void_p(x11.XOpenDisplay(None))
+if not dpy:
+    sys.exit("screensaver-inhibit: can't open the X display")
+
+listfile = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "screensaver-inhibitors")
+inhibits = {}
+cookies = itertools.count(1)
+suspended = False
+
+def update():
+    global suspended
+    want = bool(inhibits)
+    if want != suspended:
+        xss.XScreenSaverSuspend(dpy, want)
+        x11.XFlush(dpy)
+        suspended = want
+    with open(listfile, "w") as f:
+        for _, app, reason in inhibits.values():
+            f.write(f"{app}: {reason}\n" if reason else f"{app}\n")
+    subprocess.run(["pkill", "-RTMIN+9", "dwmblocks"], check=False)
+
+def name_owner_changed(conn, sender, path, iface, signal, params):
+    name, _, new = params.unpack()
+    if not new and any(v[0] == name for v in inhibits.values()):
+        for c in [c for c, v in inhibits.items() if v[0] == name]:
+            del inhibits[c]
+        update()
+
+def method_call(conn, sender, path, iface, method, params, invocation):
+    if method == "Inhibit":
+        app, reason = params.unpack()
+        cookie = next(cookies)
+        inhibits[cookie] = (sender, app, reason)
+        update()
+        invocation.return_value(GLib.Variant("(u)", (cookie,)))
+    elif method == "UnInhibit":
+        (cookie,) = params.unpack()
+        if inhibits.pop(cookie, None):
+            update()
+        invocation.return_value(None)
+    elif method == "SimulateUserActivity":
+        x11.XResetScreenSaver(dpy)
+        x11.XFlush(dpy)
+        invocation.return_value(None)
+    elif method == "Lock":
+        subprocess.Popen(["loginctl", "lock-session"])
+        invocation.return_value(None)
+    elif method in ("GetActive", "SetActive"):
+        invocation.return_value(GLib.Variant("(b)", (False,)))
+    else:
+        invocation.return_value(GLib.Variant("(u)", (0,)))
+
+bus = Gio.bus_get_sync(Gio.BusType.SESSION)
+info = Gio.DBusNodeInfo.new_for_xml(XML).interfaces[0]
+for path in ("/org/freedesktop/ScreenSaver", "/ScreenSaver"):
+    bus.register_object(path, info, method_call, None, None)
+bus.signal_subscribe("org.freedesktop.DBus", "org.freedesktop.DBus", "NameOwnerChanged",
+                     "/org/freedesktop/DBus", None, Gio.DBusSignalFlags.NONE, name_owner_changed)
+reply = bus.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                      "RequestName", GLib.Variant("(su)", (NAME, 4)), GLib.VariantType("(u)"),
+                      Gio.DBusCallFlags.NONE, -1, None)
+if reply.unpack()[0] != 1:
+    sys.exit(f"screensaver-inhibit: {NAME} is already provided")
+update()
+GLib.MainLoop().run()

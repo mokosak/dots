@@ -1,0 +1,30 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) if command -v bluetuith >/dev/null 2>&1; then
+		setsid -f sh -c '"$TERMINAL" -e bluetuith; pkill -RTMIN+5 dwmblocks'
+	else
+		setsid -f "$TERMINAL" -e bluetoothctl
+	fi ;;
+	2) if timeout 2 bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
+		timeout 5 bluetoothctl power off
+	else
+		timeout 5 bluetoothctl power on
+	fi >/dev/null 2>&1 ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+info="$(timeout 2 bluetoothctl show 2>/dev/null)"
+case "$info" in
+	*"Powered: yes"*) ;;
+	*"Powered: no"*) printf " off\n"; exit ;;
+	*) exit 0 ;;
+esac
+
+devices="$(timeout 2 bluetoothctl devices Connected 2>/dev/null | grep "^Device ")"
+count=$(printf "%s" "$devices" | grep -c "^Device ")
+case $count in
+	0) printf "\n" ;;
+	1) name="${devices#Device * }"; printf " %.16s\n" "$name" ;;
+	*) printf " %d\n" "$count" ;;
+esac

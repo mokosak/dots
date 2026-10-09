@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	4) brightnessctl -q set 5%+ ;;
+	5) brightnessctl -q set 5%- ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+set -- /sys/class/backlight/*/
+
+[ -r "${1%/}/brightness" ] || exit 0
+
+read -r curr_brightness <"${1%/}/brightness"
+
+read -r max_brightness <"${1%/}/max_brightness"
+
+brightness_per=$((100 * curr_brightness / max_brightness))
+
+printf "💡%d%%\n" "$brightness_per"

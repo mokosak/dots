@@ -1,0 +1,25 @@
+#!/bin/sh
+
+bgloc="${XDG_DATA_HOME:-$HOME/.local/share}/bg"
+
+while getopts "s" o; do case "${o}" in
+	s) silent='1' ;;
+esac done
+
+shift $((OPTIND - 1))
+
+if [ -n "$1" ]; then
+	mkdir -p "${bgloc%/*}"
+	trueloc="$(readlink -f "$1")" &&
+	case "$(file --mime-type -b "$trueloc")" in
+		image/* ) ln -sf "$trueloc" "$bgloc" && [ -z "$silent" ] && notify-send -i "$bgloc" "Changing wallpaper..." ;;
+		inode/directory ) ln -sf "$(find "$trueloc" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" && [ -z "$silent" ] && notify-send -i "$bgloc" "Random Wallpaper chosen." ;;
+		*) [ -z "$silent" ] && notify-send "🖼️ Error" "Not a valid image or directory." ; exit 1;;
+	esac
+fi
+
+if [ -e "$bgloc" ]; then
+	xwallpaper --zoom "$bgloc"
+else
+	xsetroot -solid "#282828"
+fi

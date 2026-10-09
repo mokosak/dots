@@ -1,0 +1,44 @@
+dwm.normbgcolor:     #1d2021
+dwm.normfgcolor:     #ebdbb2
+dwm.normbordercolor: #282828
+dwm.selbgcolor:      #98971a
+dwm.selfgcolor:      #1d2021
+dwm.selbordercolor:  #005577
+dwm.titlebgcolor:    #3c3836
+dwm.titlefgcolor:    #ebdbb2
+
+dmenu.normbgcolor:   #1d2021
+dmenu.normfgcolor:   #ebdbb2
+dmenu.selbgcolor:    #83a598
+dmenu.selfgcolor:    #1d2021
+
+Nsxiv.window.background: #1d2021
+Nsxiv.window.foreground: #ebdbb2
+Nsxiv.bar.background:    #282828
+Nsxiv.bar.foreground:    #ebdbb2
+Nsxiv.bar.font:          Iosevka-11
+Nsxiv.mark.foreground:   #fabd2f
+
+st.font:  Iosevka Term:weight=light:size=20:antialias=true
+st.alpha: 0.73
+
+*.background:  #1d2021
+*.foreground:  #ebdbb2
+*.cursorColor: #ebdbb2
+
+*.color0:  #282828
+*.color1:  #cc241d
+*.color2:  #98971a
+*.color3:  #d79921
+*.color4:  #458588
+*.color5:  #b16286
+*.color6:  #689d6a
+*.color7:  #a89984
+*.color8:  #928374
+*.color9:  #fb4934
+*.color10: #b8bb26
+*.color11: #fabd2f
+*.color12: #83a598
+*.color13: #d3869b
+*.color14: #8ec07c
+*.color15: #ebdbb2

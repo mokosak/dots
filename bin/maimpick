@@ -1,0 +1,32 @@
+#!/bin/sh
+
+dir="${SCREENSHOT_DIR:-$HOME/Pictures/Screenshots}"
+mkdir -p "$dir"
+output="$(date '+%y%m%d-%H%M-%S').png"
+
+full() { maim -q "$@"; }
+area() { maim -u -s "$@"; }
+window() { maim -B -q -i "$(xdotool getactivewindow)" "$@"; }
+copy() { xclip -sel clip -t image/png; }
+options="a selected area\\ncurrent window\\nfull screen\\na selected area (copy)\\ncurrent window (copy)\\nfull screen (copy)"
+
+saved() {
+	copy < "$1"
+	notify-send -i "$1" "📸 Screenshot saved and copied" "$1"
+}
+
+case "$1" in
+	full) full "$dir/pic-full-$output" && saved "$dir/pic-full-$output" ; exit ;;
+	area) area "$dir/pic-selected-$output" && saved "$dir/pic-selected-$output" ; exit ;;
+esac
+
+choice="$(printf "$options" | dmenu -l 6 -i -p "Screenshot which area?")"
+case "$choice" in *window*|"full screen"*) sleep 0.2 ;; esac
+case "$choice" in
+    "a selected area") area "$dir/pic-selected-$output" && saved "$dir/pic-selected-$output" ;;
+    "current window") window "$dir/pic-window-$output" && saved "$dir/pic-window-$output" ;;
+    "full screen") full "$dir/pic-full-$output" && saved "$dir/pic-full-$output" ;;
+    "a selected area (copy)") area | copy ;;
+    "current window (copy)") window | copy ;;
+    "full screen (copy)") full | copy ;;
+esac

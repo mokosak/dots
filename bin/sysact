@@ -1,0 +1,36 @@
+#!/bin/sh
+
+export WM="dwm"
+case "$(readlink -f /sbin/init)" in
+	*systemd*) ctl='systemctl' ;;
+	*) ctl='loginctl' ;;
+esac
+
+wmpid(){
+	tree="$(pstree -ps $$)"
+	tree="${tree#*$WM(}"
+	echo "${tree%%)*}"
+}
+
+lock(){
+	was_muted="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -o 'MUTED' && echo 1 || echo 0)"
+	pidof -x mpd >/dev/null && mpc pause &
+	wpctl set-mute @DEFAULT_AUDIO_SINK@ 1 &
+	slock
+	[ "$was_muted" -eq 0 ] && wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+	pkill -RTMIN+12 "${STATUSBAR:-dwmblocks}"
+}
+
+menu="🔒 lock\n🚪 leave $WM\n♻️ renew $WM\n🐻 hibernate\n🔃 reboot\n🖥️shutdown\n💤 sleep\n📺 display off"
+
+case "$(printf "$menu" | dmenu -i -p 'Action: ')" in
+	'🔒 lock') lock ;;
+	"🚪 leave $WM") kill -TERM "$(wmpid)" ;;
+	"♻️ renew $WM") kill -HUP "$(wmpid)" ;;
+	'🐻 hibernate') slock $ctl hibernate -i ;;
+	'💤 sleep') slock $ctl suspend -i ;;
+	'🔃 reboot') $ctl reboot -i ;;
+	'🖥️shutdown') $ctl poweroff -i ;;
+	'📺 display off') xset dpms force off ;;
+	*) exit 1 ;;
+esac
