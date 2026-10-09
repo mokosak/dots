@@ -1,3 +1,6 @@
+![desktop](screenshots/desktop.png)
+![menu](screenshots/menu.png)
+
 ## install
 
 Debian or Arch, official repos only:
